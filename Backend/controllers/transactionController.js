@@ -28,3 +28,29 @@ export const newTransaction = async (req, res, next) => {
     next(err);
   }
 };
+
+export const deleteTransaction = async (req, res, next) => {
+  console.log(req.user.userId);
+  console.log(req.params);
+  try {
+    const deleteTransaction = await transactionService.deleteTransaction(
+      req.user.userId,
+      req.params.id,
+    );
+    res.json(deleteTransaction);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const sumTransactions = async (req, res, next) => {
+  console.log(req.user.userId);
+  try {
+    const sumTransactions = await transactionService.sumTransactions(
+      req.user.userId,
+    );
+    res.json(sumTransactions);
+  } catch (err) {
+    next(err);
+  }
+};
