@@ -43,18 +43,13 @@ export const login = async ({ email, password }) => {
   if (!email || !password)
     throw { status: 400, message: "Email or password must filled" };
 
-  const existedEmail = await pool.query(
-    `SELECT * FROM users WHERE user_email = $1`,
-    [email],
-  );
-
-  if (existedEmail.rows.length === 0)
-    throw { status: 400, message: "Email not found" };
-
   const getUser = await pool.query(
     `SELECT * FROM users WHERE user_email = $1`,
     [email],
   );
+
+  if (getUser.rows.length === 0)
+    throw { status: 400, message: "Email not found" };
 
   const user = getUser.rows[0];
   const comparePassword = await bcrypt.compare(password, user.user_password);
@@ -66,6 +61,7 @@ export const login = async ({ email, password }) => {
     throw { status: 400, message: "Email or password wrong " };
 
   const payload = {
+    userId: user.user_id,
     username: user.username,
     email: user.user_email,
   };
@@ -73,7 +69,8 @@ export const login = async ({ email, password }) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
   return {
-    ...payload,
+    message: "Login successfully",
     token,
+    ...payload,
   };
 };
