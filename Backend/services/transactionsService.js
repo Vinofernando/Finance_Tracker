@@ -45,3 +45,52 @@ export const newTransaction = async ({
     data: result.rows,
   };
 };
+
+export const deleteTransaction = async (userId, transactionId) => {
+  const transaction = await pool.query(
+    `DELETE FROM transactions WHERE transaction_id = $1 AND user_id = $2 RETURNING *`,
+    [transactionId, userId],
+  );
+
+  if (transaction.rows.length === 0)
+    throw { status: 400, message: "Transaction not found" };
+
+  return {
+    message: "Delete successfully",
+    data: transaction.rows[0],
+  };
+};
+
+export const sumTransactions = async (userId) => {
+  const getIncome = await pool.query(
+    `
+      SELECT SUM (amount)
+      FROM transactions
+      WHERE user_id = $1
+      AND type = $2
+    `,
+    [userId, "income"],
+  );
+
+  const getExpense = await pool.query(
+    `
+      SELECT SUM (amount)
+      FROM transactions
+      WHERE user_id = $1
+      AND type = $2
+    `,
+    [userId, "expense"],
+  );
+
+  const income = getIncome.rows[0].sum;
+  const expense = getExpense.rows[0].sum;
+  const result = income - expense;
+
+  return {
+    data: {
+      income: `RP.${(income * 100) / 100}`,
+      expense: `RP.${(expense * 100) / 100}`,
+      result: `RP.${result}`,
+    },
+  };
+};
