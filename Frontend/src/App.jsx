@@ -1,0 +1,16 @@
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
