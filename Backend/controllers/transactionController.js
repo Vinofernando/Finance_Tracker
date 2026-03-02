@@ -1,10 +1,10 @@
 import * as transactionService from "../services/transactionsService.js";
 
 export const getUserTransaction = async (req, res, next) => {
-  console.log(req.user.userId);
   try {
     const userTransactions = await transactionService.getUserTransaction(
       req.user.userId,
+      req.query.order || "",
     );
     res.json(userTransactions);
   } catch (err) {
@@ -13,8 +13,6 @@ export const getUserTransaction = async (req, res, next) => {
 };
 
 export const newTransaction = async (req, res, next) => {
-  console.log(req.user.userId);
-  console.log(req.body);
   try {
     const addTransactions = await transactionService.newTransaction({
       userId: req.user.userId,
@@ -30,8 +28,6 @@ export const newTransaction = async (req, res, next) => {
 };
 
 export const deleteTransaction = async (req, res, next) => {
-  console.log(req.user.userId);
-  console.log(req.params);
   try {
     const deleteTransaction = await transactionService.deleteTransaction(
       req.user.userId,
@@ -44,7 +40,6 @@ export const deleteTransaction = async (req, res, next) => {
 };
 
 export const sumTransactions = async (req, res, next) => {
-  console.log(req.user.userId);
   try {
     const sumTransactions = await transactionService.sumTransactions(
       req.user.userId,
