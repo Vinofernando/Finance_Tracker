@@ -1,8 +1,7 @@
 import pool from "../config/db.js";
 
-export const getUserTransaction = async (userId) => {
-  const result = await pool.query(
-    `SELECT 
+export const getUserTransaction = async (userId, order = null) => {
+  let query = `SELECT 
       t.transaction_id,
       t.user_id,
       t.amount,
@@ -14,10 +13,16 @@ export const getUserTransaction = async (userId) => {
     FROM categories c
     INNER JOIN transactions t on t.category_id = c.categories_id
     WHERE user_id = $1
-    `,
-    [userId],
-  );
+    `;
 
+  const condition = ` ORDER BY date ${order}`;
+  if (order) {
+    query += condition;
+    const resultOrder = await pool.query(query, [userId]);
+    return resultOrder.rows;
+  }
+
+  const result = await pool.query(query, [userId]);
   return result.rows;
 };
 
@@ -84,13 +89,11 @@ export const sumTransactions = async (userId) => {
 
   const income = getIncome.rows[0].sum;
   const expense = getExpense.rows[0].sum;
-  const result = income - expense;
+  const balance = income - expense;
 
   return {
-    data: {
-      income: `RP.${(income * 100) / 100}`,
-      expense: `RP.${(expense * 100) / 100}`,
-      result: `RP.${result}`,
-    },
+    income: Number(income),
+    expense: Number(expense),
+    balance,
   };
 };
