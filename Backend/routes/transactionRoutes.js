@@ -9,7 +9,7 @@ import express from "express";
 
 const router = express.Router();
 
-router.get("/", authenticatedToken, getUserTransaction);
+router.get(`/`, authenticatedToken, getUserTransaction);
 router.post("/add-transaction", authenticatedToken, newTransaction);
 router.delete("/delete-transaction/:id", authenticatedToken, deleteTransaction);
 router.get("/summary", authenticatedToken, sumTransactions);
