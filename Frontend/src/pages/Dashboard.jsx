@@ -5,6 +5,7 @@ import "../style/dashboard.css"; // <--- Import CSS di sini
 export default function Dashboard() {
   const token = localStorage.getItem("token") || null;
   const name = localStorage.getItem("name") || "Guest";
+  const role = localStorage.getItem("role") || "Guest";
   const [data, setData] = useState([]); // Inisialisasi sebagai array kosong agar .map tidak error
   const [isLoading, setIsLoading] = useState(true);
   const [summary, setSummary] = useState(null);
@@ -18,7 +19,10 @@ export default function Dashboard() {
       return;
     }
 
-    // Menggunakan Promise.all agar loading selesai hanya setelah KEDUA data siap
+    if (role !== "user") {
+      navigate("/admin-dashboard");
+      return;
+    }
     Promise.all([
       fetch(
         `http://localhost:5000/api/transaction${sort ? `?order=${sort}` : ""}`,
@@ -44,25 +48,26 @@ export default function Dashboard() {
   }
 
   async function handleDeleteTransaction(transactionId) {
-    try {
-      await fetch(
-        `http://localhost:5000/api/transaction/delete-transaction/${transactionId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+    if (confirm("Apakah kamu yakin ini menghapus transaksi ini ?") == true) {
+      try {
+        await fetch(
+          `http://localhost:5000/api/transaction/delete-transaction/${transactionId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           },
-        },
-      );
-    } catch (error) {
-      console.error("Fetch error:", error);
+        );
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    } else {
+      return;
     }
   }
 
-  // function handleDelete(transactionId) {
-  //   console.log(transactionId);
-  // }
   if (isLoading) {
     return <div className="loading-center">Memuat data keuangan...</div>;
   }
@@ -70,7 +75,9 @@ export default function Dashboard() {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div>
-          <h2 className="welcome-text">Halo, Selamat Datang {name}!</h2>
+          <h2 className="welcome-text">
+            Halo, Selamat Datang {name}! role: ({role})
+          </h2>
           <p className="date-text">
             {new Date().toLocaleDateString("id-ID", {
               weekday: "long",
