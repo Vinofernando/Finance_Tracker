@@ -19,3 +19,15 @@ export const login = async (req, res, next) => {
     return next(err);
   }
 };
+
+export const deleteUser = async (req, res, next) => {
+  try {
+    const deleteResult = await authService.deleteUser(
+      req.params.userId,
+      req.user.role,
+    );
+    res.json(deleteResult);
+  } catch (err) {
+    return next(err);
+  }
+};
