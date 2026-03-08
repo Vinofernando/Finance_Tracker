@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../style/login.css";
 
 export default function Login() {
@@ -28,10 +28,15 @@ export default function Login() {
       // Simpan token
       localStorage.setItem("token", data.token);
       localStorage.setItem("name", data.username);
+      localStorage.setItem("role", data.role);
       alert("Login Berhasil!");
 
       // Biasanya di sini kamu gunakan useNavigate dari react-router-dom
       // window.location.href = "/dashboard";
+      if (data.role === "admin") {
+        return navigate("/admin-dashboard");
+      }
+
       navigate("/");
     } catch (err) {
       setError(err.message);
@@ -45,7 +50,7 @@ export default function Login() {
         <h2>Login</h2>
         {error && <div style={{ color: "red" }}>{error}</div>}
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="login-form">
           <input
             type="email" // Gunakan type email untuk validasi dasar
             value={email}
@@ -62,8 +67,11 @@ export default function Login() {
             required
           />
           <br />
-          <button type="submit">Login</button>
+          <button type="submit" className="login-btn">
+            Login
+          </button>
         </form>
+        <Link to="/register">Do not have account ?</Link>
       </div>
     </div>
   );
