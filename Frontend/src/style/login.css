@@ -18,7 +18,7 @@
   flex-direction: column;
   border-radius: 8px;
 }
-form {
+form.login-form {
   display: flex;
   flex-direction: column;
 }
@@ -31,7 +31,7 @@ input {
 input:focus {
   outline: none;
 }
-button {
+button.login-btn {
   background-color: dodgerblue;
   border: none;
   border-radius: 8px;
