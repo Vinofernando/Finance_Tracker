@@ -49,3 +49,12 @@ export const sumTransactions = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await transactionService.getUser(req.query.userId);
+    res.json(user);
+  } catch (err) {
+    return next(err);
+  }
+};
