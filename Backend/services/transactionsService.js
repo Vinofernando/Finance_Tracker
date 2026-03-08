@@ -97,3 +97,16 @@ export const sumTransactions = async (userId) => {
     balance,
   };
 };
+
+export const getUser = async (userId = null) => {
+  const query = `SELECT user_id, username, user_email, role FROM users WHERE role != $1`;
+
+  if (userId !== null) {
+    const condition = `${query} AND user_id = $2 `;
+    const res = await pool.query(condition, ["admin", userId]);
+    return res.rows;
+  }
+
+  const res = await pool.query(query, ["admin"]);
+  return res.rows;
+};
