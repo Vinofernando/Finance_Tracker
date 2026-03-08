@@ -47,8 +47,10 @@ export default function AddPages() {
     console.log(amount, description, type, categoryId);
   }
   return (
-    <div className="dashboard-container">
-      <Link to={"/"}>Kembali</Link>
+    <div className="dashboard-container-add">
+      <Link to={"/"} className="add-transaction-back">
+        Kembali
+      </Link>
       <form onSubmit={formHandler}>
         <input
           type="text"
