@@ -18,22 +18,25 @@ export const register = async ({ username, email, password }) => {
   );
 
   if (existedEmail.rows.length > 0) {
-    return { status: 400, message: "Email already registered" };
+    throw { status: 400, message: "Email already registered" };
   }
 
   const verifiedToken = uuidv4();
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + 24);
+
   await pool.query(
     `
-        INSERT INTO users(username, user_email, user_password, verified_token)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO users(username, user_email, user_password, verified_token, token_expires_at)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING username, user_email
     `,
-    [username, email, hashedPassword, verifiedToken],
+    [username, email, hashedPassword, verifiedToken, expiresAt],
   );
 
-  sendVerification(email, verifiedToken);
+  await sendVerification(email, verifiedToken);
   return {
     message: "Registered successfully pleas check ur email for verification",
   };
@@ -64,6 +67,7 @@ export const login = async ({ email, password }) => {
     userId: user.user_id,
     username: user.username,
     email: user.user_email,
+    role: user.role,
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
@@ -72,5 +76,23 @@ export const login = async ({ email, password }) => {
     message: "Login successfully",
     token,
     ...payload,
+  };
+};
+
+export const deleteUser = async (userId, role) => {
+  if (!userId) throw { status: 400, message: "UserId undefined" };
+
+  const result = await pool.query(
+    `DELETE FROM users WHERE user_id = $1 RETURNING *`,
+    [userId],
+  );
+
+  if (result.rowCount === 0) throw { status: 400, message: "User not found" };
+  if (result.rows[0].role === "admin")
+    throw { status: 400, message: "Tidak bisa menghapus role admin" };
+
+  return {
+    message: "Delete user successfully",
+    result: result.rows[0],
   };
 };
