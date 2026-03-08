@@ -1,8 +1,46 @@
-.dashboard-container {
+.dashboard-container-add {
   max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   font-family: "Segoe UI", Roboto, sans-serif;
   background-color: #f8f9fa;
-  min-height: 100vh;
+  min-height: 80vh;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 8px;
+  box-shadow: 1px 5px 17px 5px rgba(0, 0, 0, 0.52);
+}
+
+.dashboard-container-add form {
+  width: 50%;
+  gap: 10px;
+}
+.add-transaction-back {
+  display: flex;
+  justify-content: center;
+  background-color: dodgerblue;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white;
+  transition: background-color ease-in 0.1s;
+  width: 50%;
+}
+
+.add-transaction-back:hover {
+  background-color: orange;
+}
+
+.dashboard-container-add select {
+  border-radius: 8px;
+}
+
+.dashboard-container-add select option {
+  transition: all ease-in 0.1s;
+  border-radius: 8px;
+}
+.dashboard-container-add select option:hover {
+  background-color: green;
 }
