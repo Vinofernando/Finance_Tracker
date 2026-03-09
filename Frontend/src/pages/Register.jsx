@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "../style/login.css";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -38,31 +40,48 @@ export default function Register() {
     }
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    });
+  }, [error]);
   return (
-    <>
-      {loading && <h1>loading</h1>}
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          value={username || ""}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="username"
-        />
-        <input
-          type="text"
-          value={email || ""}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="email"
-        />
-        <input
-          type="text"
-          value={password || ""}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
-        />
-        <button type="submit">Register</button>
-      </form>
-    </>
+    <div className="register-container">
+      <div className="register-card">
+        <h1>Register</h1>
+        <form onSubmit={handleRegister} className="register-form">
+          <input
+            type="text"
+            value={username || ""}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="username"
+          />
+          <input
+            type="text"
+            value={email || ""}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email"
+          />
+          <input
+            type="text"
+            value={password || ""}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="password"
+          />
+          <button type="submit" className="register-btn">
+            Register
+          </button>
+        </form>
+        <Link to="/login" className="register-have-acc">
+          have account ?
+        </Link>
+        {loading && <p>Sedang mendaftarkan akun</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </div>
+    </div>
   );
 }
