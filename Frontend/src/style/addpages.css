@@ -14,7 +14,9 @@
   box-shadow: 1px 5px 17px 5px rgba(0, 0, 0, 0.52);
 }
 
-.dashboard-container-add form {
+form.add-transaction-form {
+  display: flex;
+  flex-direction: column;
   width: 50%;
   gap: 10px;
 }
