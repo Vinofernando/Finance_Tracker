@@ -71,7 +71,9 @@ export default function Login() {
             Login
           </button>
         </form>
-        <Link to="/register">Do not have account ?</Link>
+        <Link to="/register" className="login-not-have-acc">
+          Do not have account ?
+        </Link>
       </div>
     </div>
   );
