@@ -48,7 +48,6 @@
   border-radius: 20px;
   margin-bottom: 30px;
   box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3);
-  position: sticky;
 }
 
 .balance-amount {
@@ -87,6 +86,7 @@
   gap: 12px;
   overflow: auto;
   height: 70vh;
+  overflow-x: hidden;
 }
 
 .transaction-card {
@@ -124,6 +124,11 @@
   color: #e53e3e;
 }
 
+.user-transaction {
+  min-width: 230px;
+  max-width: 230px;
+}
+
 .description {
   margin: 0;
   font-size: 16px;
@@ -154,6 +159,9 @@
   background-color: rgb(240, 79, 79);
   padding: 10px 10px;
   transition: all ease-in 0.1s;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
 }
 
 .delete-btn:hover {
