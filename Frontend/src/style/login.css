@@ -1,4 +1,5 @@
-.login-container {
+.login-container,
+.register-container {
   height: 80vh;
   display: flex;
   align-items: center;
@@ -8,7 +9,8 @@
   background-color: #f8f9fa;
 }
 
-.login-card {
+.login-card,
+.register-card {
   background-color: white;
   min-width: 20%;
   min-height: 50%;
@@ -18,9 +20,14 @@
   flex-direction: column;
   border-radius: 8px;
 }
-form.login-form {
+form.login-form,
+form.register-form {
   display: flex;
   flex-direction: column;
+}
+
+.register-form input {
+  margin: 10px 0;
 }
 input {
   border-radius: 8px;
@@ -31,9 +38,18 @@ input {
 input:focus {
   outline: none;
 }
-button.login-btn {
+button.login-btn,
+button.register-btn {
   background-color: dodgerblue;
   border: none;
   border-radius: 8px;
   padding: 10px 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.login-not-have-acc,
+.register-have-acc {
+  text-decoration: none;
+  color: gray;
 }
