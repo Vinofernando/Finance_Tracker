@@ -43,8 +43,12 @@ export default function Dashboard() {
   }, [token, navigate, sort, data]);
 
   function logoutHandler() {
-    localStorage.clear();
-    navigate("/login");
+    if (confirm("Apa kamu yakin ingin logout ?") == true) {
+      localStorage.clear();
+      navigate("/login");
+    } else {
+      return;
+    }
   }
 
   async function handleDeleteTransaction(transactionId) {
@@ -134,7 +138,7 @@ export default function Dashboard() {
                 >
                   {transaction.type === "income" ? "↓" : "↑"}
                 </div>
-                <div>
+                <div className="user-transaction">
                   <h4 className="description">{transaction.description}</h4>
                   <p className="type-tag">{transaction.type.toUpperCase()}</p>
                   <p className="type-date">
@@ -149,7 +153,6 @@ export default function Dashboard() {
                 className={`amount ${transaction.type === "income" ? "amount-in" : "amount-out"}`}
               >
                 Rp
-                {transaction.type === "income" ? "+" : "-"}
                 {new Intl.NumberFormat("id-ID").format(transaction.amount)}
               </div>
               <div>
