@@ -51,7 +51,7 @@ export default function AddPages() {
       <Link to={"/"} className="add-transaction-back">
         Kembali
       </Link>
-      <form onSubmit={formHandler}>
+      <form onSubmit={formHandler} className="add-transaction-form">
         <input
           type="text"
           value={amount ?? ""}
@@ -64,8 +64,11 @@ export default function AddPages() {
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
-          <option>income</option>
-          <option>expense</option>
+          <option value="" disabled>
+            -- Pilih Kategori --
+          </option>
+          <option value={"income"}>income</option>
+          <option value={"expense"}>expense</option>
         </select>
         <select
           name=""
@@ -73,6 +76,9 @@ export default function AddPages() {
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
         >
+          <option value="" disabled>
+            -- Pilih Kategori --
+          </option>
           <option value={1}>Transportasi</option>
           <option value={2}>Makanan/minuman</option>
           <option value={3}>Pemindahan dana</option>
