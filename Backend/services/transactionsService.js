@@ -36,18 +36,29 @@ export const newTransaction = async ({
   if (!amount || !type || !categoryId || !description)
     throw { status: 400, message: "All field required" };
 
+  // 1. Pastikan amount adalah angka (number)
+  let finalAmount = Number(amount);
+
+  // 2. Logika pengubahan menjadi minus jika expense
+  // Math.abs memastikan angka menjadi positif, lalu dikali -1 jika expense
+  if (type.toLowerCase() === "expense") {
+    finalAmount = Math.abs(finalAmount) * -1;
+  } else {
+    finalAmount = Math.abs(finalAmount); // Pastikan income selalu positif
+  }
+
   const result = await pool.query(
     `
       INSERT INTO transactions(user_id, amount, type, category_id, description)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `,
-    [userId, amount, type, categoryId, description],
+    [userId, finalAmount, type, categoryId, description],
   );
 
   return {
     message: "Successfully add new transaction",
-    data: result.rows,
+    data: result.rows[0], // Biasanya lebih baik return satu objek saja
   };
 };
 
@@ -89,7 +100,7 @@ export const sumTransactions = async (userId) => {
 
   const income = getIncome.rows[0].sum;
   const expense = getExpense.rows[0].sum;
-  const balance = income - expense;
+  const balance = income - -expense;
 
   return {
     income: Number(income),
@@ -99,14 +110,34 @@ export const sumTransactions = async (userId) => {
 };
 
 export const getUser = async (userId = null) => {
-  const query = `SELECT user_id, username, user_email, role FROM users WHERE role != $1`;
+  // Query dasar dengan pemisahan Income dan Expense
+  const query = `
+  SELECT 
+    u.user_id, 
+    u.username, 
+    u.user_email, 
+    u.role, 
+    SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END) as total_income,
+    SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END) as total_expense,
+    SUM(t.amount) as total_amount
+  FROM transactions t 
+  LEFT JOIN users u ON t.user_id = u.user_id 
+  WHERE u.role != $1
+`;
+
+  // Bagian Group By yang lengkap agar tidak error
+  const groupByClause = ` GROUP BY u.user_id, u.username, u.user_email, u.role`;
 
   if (userId !== null) {
-    const condition = `${query} AND user_id = $2 `;
+    // Jika mencari spesifik 1 user
+    const condition = `${query} AND u.user_id = $2 ${groupByClause}`;
     const res = await pool.query(condition, ["admin", userId]);
     return res.rows;
   }
 
-  const res = await pool.query(query, ["admin"]);
-  return res.rows;
+  // Jika mengambil semua user
+  const res = await pool.query(query + groupByClause, ["admin"]);
+  return {
+    user: res.rows,
+  };
 };
