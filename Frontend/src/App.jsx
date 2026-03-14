@@ -2,15 +2,14 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddPages from "./pages/AddTransactions";
 import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
-import AuthManager from "./auth/AuthManager";
 import VerificationSuccess from "./pages/VerificationSuccess";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
+import MyChart from "./pages/Chart";
 
 function App() {
   return (
     <BrowserRouter>
-      <AuthManager />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
@@ -21,6 +20,7 @@ function App() {
           element={<VerificationSuccess />}
         />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/chart" element={<MyChart />} />
       </Routes>
     </BrowserRouter>
   );
