@@ -1,6 +1,12 @@
 import pool from "../config/db.js";
 
-export const getUserTransaction = async (userId, order = null) => {
+export const getUserTransaction = async (
+  userId,
+  start = "",
+  end = "",
+  order = null,
+) => {
+  const value = [userId];
   let query = `SELECT 
       t.transaction_id,
       t.user_id,
@@ -15,14 +21,22 @@ export const getUserTransaction = async (userId, order = null) => {
     WHERE user_id = $1
     `;
 
-  const condition = ` ORDER BY date ${order}`;
-  if (order) {
-    query += condition;
-    const resultOrder = await pool.query(query, [userId]);
-    return resultOrder.rows;
+  if ((end && !start) || start > end) {
+    throw {
+      status: 400,
+      message: "Tanggal akhir tidak boleh lebih kecil dari awal",
+    };
+  }
+  if (start || end) {
+    query += ` AND (date AT TIME ZONE 'Asia/Jakarta')::date between '${start}' AND '${end}'`;
   }
 
-  const result = await pool.query(query, [userId]);
+  if (order !== null) {
+    query += ` ORDER BY date ${order}`;
+  }
+
+  const result = await pool.query(query, value);
+  console.log(query);
   return result.rows;
 };
 
@@ -36,15 +50,12 @@ export const newTransaction = async ({
   if (!amount || !type || !categoryId || !description)
     throw { status: 400, message: "All field required" };
 
-  // 1. Pastikan amount adalah angka (number)
   let finalAmount = Number(amount);
 
-  // 2. Logika pengubahan menjadi minus jika expense
-  // Math.abs memastikan angka menjadi positif, lalu dikali -1 jika expense
   if (type.toLowerCase() === "expense") {
     finalAmount = Math.abs(finalAmount) * -1;
   } else {
-    finalAmount = Math.abs(finalAmount); // Pastikan income selalu positif
+    finalAmount = Math.abs(finalAmount);
   }
 
   const result = await pool.query(
@@ -125,17 +136,14 @@ export const getUser = async (userId = null) => {
   WHERE u.role != $1
 `;
 
-  // Bagian Group By yang lengkap agar tidak error
   const groupByClause = ` GROUP BY u.user_id, u.username, u.user_email, u.role`;
 
   if (userId !== null) {
-    // Jika mencari spesifik 1 user
     const condition = `${query} AND u.user_id = $2 ${groupByClause}`;
     const res = await pool.query(condition, ["admin", userId]);
     return res.rows;
   }
 
-  // Jika mengambil semua user
   const res = await pool.query(query + groupByClause, ["admin"]);
   return {
     user: res.rows,
