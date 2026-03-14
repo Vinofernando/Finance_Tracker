@@ -33,8 +33,6 @@ export default function Dashboard() {
   const end = formatDate(dateRange[1]);
   const today = formatDate(new Date());
 
-  console.log(start, end); // Sekarang hasilnya akan tetap tanggal 9 jika diklik tanggal 9
-  console.log(start, end);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +47,6 @@ export default function Dashboard() {
     }
 
     const url = `http://localhost:5000/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}`;
-    console.log(url);
     Promise.all([
       fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
