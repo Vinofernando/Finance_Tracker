@@ -1,10 +1,13 @@
 import * as transactionService from "../services/transactionsService.js";
 
 export const getUserTransaction = async (req, res, next) => {
+  console.log(req.query);
   try {
     const userTransactions = await transactionService.getUserTransaction(
-      req.user.userId,
-      req.query.order || "",
+      Number(req.user.userId),
+      req.query.start,
+      req.query.end,
+      req.query.order || null,
     );
     res.json(userTransactions);
   } catch (err) {
