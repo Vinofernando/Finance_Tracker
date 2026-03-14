@@ -10,11 +10,12 @@ const transporter = nodemailer.createTransport({
 
 export const sendVerification = async (toEmail, token) => {
   // Gunakan ENV agar link berubah otomatis saat di production (bukan localhost terus)
-  const baseUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  const baseUrl =
+    process.env.FRONTEND_URL || "https://FinanceTrackerV.netlify.app";
   const link = `${baseUrl}/success-verification?token=${token}`;
 
   await transporter.sendMail({
-    from: `Finance tracker <${process.env.EMAIL_USER}>`, // Lebih terlihat profesional
+    from: `Finance tracker`, // Lebih terlihat profesional
     to: toEmail,
     subject: "Verifikasi Email Anda",
     // Gunakan tanda kutip pada href untuk mencegah error HTML
