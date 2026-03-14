@@ -1,20 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "../style/dashboard.css"; // <--- Import CSS di sini
+import { User, Settings, LogOut, ChevronDown } from "lucide-react";
+import checkExpiredToken from "../utils/checkExpiredToken";
+import Calendar from "react-calendar";
+import "../style/dashboard.css";
+import "react-calendar/dist/Calendar.css";
 
 export default function Dashboard() {
   const token = localStorage.getItem("token") || null;
   const name = localStorage.getItem("name") || "Guest";
   const role = localStorage.getItem("role") || "Guest";
-  const [data, setData] = useState([]); // Inisialisasi sebagai array kosong agar .map tidak error
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [summary, setSummary] = useState(null);
   const [sort, setSort] = useState("asc");
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const [dateRange, setDateRange] = useState([new Date(), new Date()]);
+  const [filter, setFilter] = useState("all");
 
+  // Fungsi pembantu (helper) untuk format YYYY-MM-DD lokal
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // Di dalam komponen Anda:
+  const start = formatDate(dateRange[0]);
+  const end = formatDate(dateRange[1]);
+  const today = formatDate(new Date());
+
+  console.log(start, end); // Sekarang hasilnya akan tetap tanggal 9 jika diklik tanggal 9
+  console.log(start, end);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!token) {
+    if (!token || checkExpiredToken(token) < new Date()) {
       navigate("/login");
       return;
     }
@@ -23,13 +47,13 @@ export default function Dashboard() {
       navigate("/admin-dashboard");
       return;
     }
+
+    const url = `http://localhost:5000/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}`;
+    console.log(url);
     Promise.all([
-      fetch(
-        `http://localhost:5000/api/transaction${sort ? `?order=${sort}` : ""}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      ).then((res) => res.json()),
+      fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      }).then((res) => res.json()),
       fetch("http://localhost:5000/api/transaction/summary", {
         headers: { Authorization: `Bearer ${token}` },
       }).then((res) => res.json()),
@@ -40,7 +64,17 @@ export default function Dashboard() {
       })
       .catch((err) => console.error("Fetch error:", err))
       .finally(() => setIsLoading(false));
-  }, [token, navigate, sort, data]);
+  }, [token, navigate, sort, role, start, end, today, filter]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function logoutHandler() {
     if (confirm("Apa kamu yakin ingin logout ?") == true) {
@@ -79,9 +113,7 @@ export default function Dashboard() {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div>
-          <h2 className="welcome-text">
-            Halo, Selamat Datang {name}! role: ({role})
-          </h2>
+          <h2 className="welcome-text">Halo, Selamat Datang {name}!</h2>
           <p className="date-text">
             {new Date().toLocaleDateString("id-ID", {
               weekday: "long",
@@ -114,12 +146,57 @@ export default function Dashboard() {
       </div>
       <div className="section-header">
         <h3 style={{ margin: 0 }}>Riwayat Transaksi</h3>
+
+        <select
+          name=""
+          id=""
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="" disabled>
+            filter by
+          </option>
+          <option value="all">all</option>
+          <option value="byDate">date</option>
+        </select>
+        {filter === "byDate" ? (
+          <div ref={dropdownRef} className="profile-dropdown">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="profile-btn"
+              style={{
+                backgroundColor: "dodgerblue",
+                border: "none",
+                borderRadius: "10px",
+                color: "white",
+              }}
+            >
+              <div className="profile-name">
+                <p style={{ margin: "0" }}>Filter by date</p>
+              </div>
+              <ChevronDown size={16} />
+            </button>
+
+            {isOpen && (
+              <>
+                <Calendar
+                  onChange={setDateRange}
+                  value={dateRange}
+                  selectRange={true}
+                />
+              </>
+            )}
+          </div>
+        ) : null}
         <select
           name=""
           id=""
           value={sort}
           onChange={(e) => setSort(e.target.value)}
         >
+          <option value="" disabled>
+            Sort by
+          </option>
           <option value="asc">newest</option>
           <option value="desc">oldest</option>
         </select>
@@ -128,6 +205,15 @@ export default function Dashboard() {
         </span>
       </div>
 
+      {filter === "all" && <p className="filter-date">All trasaction</p>}
+      {filter === "byDate" && start === end && start === today && (
+        <p className="filter-date">Transaksi hari ini</p>
+      )}
+      {filter === "byDate" && start != end && (
+        <p className="filter-date">
+          From: {start} - To: {end}
+        </p>
+      )}
       <div className="list-container">
         {data.length > 0 ? (
           data.map((transaction) => (

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import checkExpiredToken from "../utils/checkExpiredToken";
 import "../style/AdminDashboard.css";
 
 export default function AdminDashboard() {
@@ -12,15 +13,19 @@ export default function AdminDashboard() {
 
   const [userList, setUserList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!token) {
+    if (!token || checkExpiredToken(token) < new Date()) {
+      localStorage.clear();
       navigate("/login");
+      return;
     }
     async function fetchUsers() {
       try {
+        setLoading(true);
         const res = await fetch(
           `http://localhost:5000/api/transaction/users${userId ? `?userId=${userId}` : ""}  `,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -40,8 +45,11 @@ export default function AdminDashboard() {
       }
     }
     fetchUsers();
-  }, [userList, loading, userId, token]);
+  }, [userId, token, navigate]);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   async function deleteUser(userId) {
     try {
       if (confirm("Apa kamu ingin menghapus akun ini ?") == true) {
@@ -95,40 +103,27 @@ export default function AdminDashboard() {
                   username: {user.username}({user.role})
                 </p>
                 <p>email: {user.user_email}</p>
-                <p
-                  className="positive"
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  <div
-                    style={{
-                      background: "green",
-                      height: "10px",
-                      width: "10px",
-                    }}
-                  ></div>
-                  Income:{" "}
-                  {user.total_income
-                    ? "Rp" +
-                      new Intl.NumberFormat("id-ID").format(user.total_income)
-                    : "no have transaction yet"}
-                </p>
-                <p
-                  className="negative"
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  <div
-                    style={{
-                      background: "red",
-                      height: "10px",
-                      width: "10px",
-                    }}
-                  ></div>
-                  Expense:{" "}
-                  {user.total_expense
-                    ? "Rp " +
-                      new Intl.NumberFormat("id-ID").format(user.total_expense)
-                    : "no have transaction yet"}
-                </p>
+
+                {isClient && user.total_income ? (
+                  <p className="positive">
+                    Income: Rp
+                    {new Intl.NumberFormat("id-ID").format(user.total_income)}
+                  </p>
+                ) : !isClient ? (
+                  "Loading..."
+                ) : (
+                  "no have transaction yet"
+                )}
+                {isClient && user.total_expense ? (
+                  <p className="negative">
+                    Income: Rp
+                    {new Intl.NumberFormat("id-ID").format(user.total_expense)}
+                  </p>
+                ) : !isClient ? (
+                  "Loading..."
+                ) : (
+                  "no have transaction yet"
+                )}
                 <p
                   className={
                     Number(user.total_amount) < 0 ? "negative" : "positive"

@@ -5,7 +5,6 @@ import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 import VerificationSuccess from "./pages/VerificationSuccess";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
-import MyChart from "./pages/Chart";
 
 function App() {
   return (
@@ -20,7 +19,6 @@ function App() {
           element={<VerificationSuccess />}
         />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/chart" element={<MyChart />} />
       </Routes>
     </BrowserRouter>
   );

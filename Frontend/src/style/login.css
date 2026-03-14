@@ -52,4 +52,9 @@ button.register-btn {
 .register-have-acc {
   text-decoration: none;
   color: gray;
+  transition: all ease 0.2s;
+}
+.register-have-acc:hover,
+.login-not-have-acc:hover {
+  color: black;
 }

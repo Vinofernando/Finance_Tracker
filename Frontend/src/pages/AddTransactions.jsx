@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../style/addpages.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import checkExpiredToken from "../utils/checkExpiredToken";
 
 export default function AddPages() {
   const token = localStorage.getItem("token") || null;
@@ -8,11 +9,15 @@ export default function AddPages() {
   const [type, setType] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
+  const navigate = useNavigate();
 
   async function formHandler(e) {
     e.preventDefault();
 
     try {
+      if (!token && checkExpiredToken(token) < new Date()) {
+        navigate("/login");
+      }
       const response = await fetch(
         "http://localhost:5000/api/transaction/add-transaction",
         {
@@ -36,15 +41,10 @@ export default function AddPages() {
         alert(`Error: ${errorData.message || "Terjadi kesalahan pada server"}`);
         return;
       }
-
-      const data = await response.json();
-      console.log("Success:", data);
       alert("Transaksi berhasil ditambahkan!");
     } catch (error) {
       return <div>{error.message}</div>;
     }
-
-    console.log(amount, description, type, categoryId);
   }
   return (
     <div className="dashboard-container-add">

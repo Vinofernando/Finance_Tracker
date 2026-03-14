@@ -68,6 +68,7 @@
   display: flex;
   justify-content: center;
   transition: background-color ease-in 0.1s;
+  margin: 10px 0;
 }
 
 .section-option a:hover {
@@ -178,4 +179,115 @@
   text-align: center;
   color: #999;
   margin-top: 20px;
+}
+
+/* CALENDER */
+/* Container Utama */
+.react-calendar {
+  width: 350px;
+  max-width: 100%;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.125em;
+  padding: 10px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigasi (Bulan & Tahun) */
+.react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 0.5em;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  border: none;
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: relative; /* Induk */
+}
+
+/* Bungkus kalender agar melayang */
+/* Pastikan induknya adalah jangkar */
+.profile-dropdown {
+  position: relative;
+}
+
+/* Styling untuk Kalender yang melayang */
+.profile-dropdown .react-calendar {
+  position: absolute;
+  top: 100%; /* Muncul tepat di bawah tombol */
+  right: 0; /* Rata kanan agar tidak keluar layar jika di pinggir */
+
+  /* SOLUSI UTAMA: Tentukan lebar tetap */
+  width: 350px;
+  max-width: 90vw; /* Agar tidak hancur di layar HP yang sangat kecil */
+
+  background: white;
+  z-index: 1000; /* Agar berada di atas kartu transaksi */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+/* Styling Nama Hari (Sen, Sel, Rab...) */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75em;
+  color: #888;
+}
+
+/* Styling Tanggal (Angka) */
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 10px 6.6667px;
+  background: none;
+  text-align: center;
+  line-height: 16px;
+  border: none;
+  border-radius: 8px; /* Membuat angka hari agak bulat */
+  transition: background 0.2s ease;
+}
+
+/* Saat tanggal di-hover */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #f0f4ff;
+  color: #3b82f6;
+}
+
+/* Tanggal Hari Ini */
+.react-calendar__tile--now {
+  background: #ffedf0 !important;
+  color: #ff4d4d !important;
+  font-weight: bold;
+}
+
+/* Tanggal yang Terpilih (Active) */
+.react-calendar__tile--active {
+  background: #3b82f6 !important;
+  color: white !important;
+}
+
+/* Menghilangkan garis bawah pada link tanggal */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #ccc; /* Tanggal di luar bulan aktif */
+}
+
+.filter-date {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px black solid;
+  border-top: 1px solid black;
 }
