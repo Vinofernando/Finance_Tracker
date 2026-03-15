@@ -28,7 +28,8 @@ export const sendVerification = async (toEmail, token) => {
     });
 
     if (error) {
-      console.error("Email error:", error, process.env.RESEND_API_KEY);
+      console.log("API KEY:", process.env.RESEND_API_KEY);
+      console.error("Email error:", error);
     } else {
       console.log("Email sent:", data);
     }
