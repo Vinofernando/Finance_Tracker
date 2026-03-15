@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import checkExpiredToken from "../utils/checkExpiredToken";
-import "../style/AdminDashboard.css";
+import "../style/adminDashboard.css";
 
 export default function AdminDashboard() {
   const token = localStorage.getItem("token") || null;
