@@ -20,12 +20,13 @@ export const sendVerification = async (toEmail, token) => {
     process.env.FRONTEND_URL || "https://FinanceTrackerV.netlify.app";
   const link = `${baseUrl}/success-verification?token=${token}`;
 
-  await resend.emails.send({
-    from: `Finance tracker`, // Lebih terlihat profesional
-    to: toEmail,
-    subject: "Verifikasi Email Anda",
-    // Gunakan tanda kutip pada href untuk mencegah error HTML
-    html: `
+  try {
+    const info = await resend.emails.send({
+      from: `Finance tracker <onboarding@resend.dev>`, // Lebih terlihat profesional
+      to: toEmail,
+      subject: "Verifikasi Email Anda",
+      // Gunakan tanda kutip pada href untuk mencegah error HTML
+      html: `
       <div style="font-family: sans-serif; line-height: 1.5;">
         <p>Halo,</p>
         <p>Silakan klik tombol di bawah ini untuk memverifikasi email Anda. Link ini akan kedaluwarsa dalam 15 menit:</p>
@@ -36,5 +37,9 @@ export const sendVerification = async (toEmail, token) => {
         <p><small>${link}</small></p>
       </div>
     `,
-  });
+    });
+    console.log("Email sent:", info.response);
+  } catch (error) {
+    console.error("Email error:", error);
+  }
 };
