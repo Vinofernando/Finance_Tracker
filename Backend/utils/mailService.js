@@ -16,12 +16,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendVerification = async (toEmail, token) => {
   const baseUrl =
-    process.env.FRONTEND_URL || "https://FinanceTrackerV.netlify.app";
+    process.env.FRONTEND_URL || "https://finance-tracker.store.netlify.app";
   const link = `${baseUrl}/success-verification?token=${token}`;
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Finance Tracker <noreply@financetracker.site>",
+      from: "Finance Tracker <noreply@finance-tracker.store>",
       to: toEmail,
       subject: "Verifikasi Email Anda",
       html: `<a href="${link}">Verifikasi Email</a>`,
