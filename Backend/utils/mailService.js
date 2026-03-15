@@ -23,7 +23,7 @@ export const sendVerification = async (toEmail, token) => {
   try {
     const info = await resend.emails.send({
       from: `Finance tracker <onboarding@resend.dev>`, // Lebih terlihat profesional
-      to: toEmail,
+      to: "vinofernando38@gmail.com",
       subject: "Verifikasi Email Anda",
       // Gunakan tanda kutip pada href untuk mencegah error HTML
       html: `
@@ -38,7 +38,8 @@ export const sendVerification = async (toEmail, token) => {
       </div>
     `,
     });
-    console.log("Email sent:", info.response);
+    console.log("RESEND KEY:", process.env.RESEND_API_KEY);
+    console.log("Email sent:", info);
   } catch (error) {
     console.error("Email error:", error);
   }
