@@ -15,8 +15,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendVerification = async (toEmail, token) => {
-  const baseUrl =
-    process.env.FRONTEND_URL || "https://finance-tracker.store.netlify.app";
+  const baseUrl = process.env.FRONTEND_URL || "https://finance-tracker.store";
   const link = `${baseUrl}/success-verification?token=${token}`;
 
   try {
