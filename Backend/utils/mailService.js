@@ -1,13 +1,16 @@
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 5000,
-});
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+//   connectionTimeout: 5000,
+// });
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendVerification = async (toEmail, token) => {
   // Gunakan ENV agar link berubah otomatis saat di production (bukan localhost terus)
@@ -16,7 +19,7 @@ export const sendVerification = async (toEmail, token) => {
   const link = `${baseUrl}/success-verification?token=${token}`;
 
   try {
-    const info = await transporter.sendMail({
+    const info = await resend.emails.send({
       from: `Finance tracker`, // Lebih terlihat profesional
       to: toEmail,
       subject: "Verifikasi Email Anda",
