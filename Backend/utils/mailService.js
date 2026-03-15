@@ -21,26 +21,19 @@ export const sendVerification = async (toEmail, token) => {
   const link = `${baseUrl}/success-verification?token=${token}`;
 
   try {
-    const info = await resend.emails.send({
-      from: `Finance tracker <onboarding@resend.dev>`, // Lebih terlihat profesional
-      to: "vinofernando38@gmail.com",
+    const { data, error } = await resend.emails.send({
+      from: "Finance Tracker <onboarding@resend.dev>",
+      to: toEmail,
       subject: "Verifikasi Email Anda",
-      // Gunakan tanda kutip pada href untuk mencegah error HTML
-      html: `
-      <div style="font-family: sans-serif; line-height: 1.5;">
-        <p>Halo,</p>
-        <p>Silakan klik tombol di bawah ini untuk memverifikasi email Anda. Link ini akan kedaluwarsa dalam 15 menit:</p>
-        <a href="${link}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-          Verifikasi Email Sekarang
-        </a>
-        <p>Atau copy-paste link berikut ke browser Anda:</p>
-        <p><small>${link}</small></p>
-      </div>
-    `,
+      html: `<a href="${link}">Verifikasi Email</a>`,
     });
-    console.log("RESEND KEY:", process.env.RESEND_API_KEY);
-    console.log("Email sent:", info);
-  } catch (error) {
-    console.error("Email error:", error);
+
+    if (error) {
+      console.error("Email error:", error);
+    } else {
+      console.log("Email sent:", data);
+    }
+  } catch (err) {
+    console.error("Send failed:", err);
   }
 };
