@@ -38,7 +38,7 @@ export const register = async ({ username, email, password }) => {
       [username, email, hashedPassword, verifiedToken, expiresAt],
     );
 
-    await sendVerification(email, verifiedToken);
+    // await sendVerification(email, verifiedToken);
     return {
       message: "Registered successfully pleas check ur email for verification",
     };
