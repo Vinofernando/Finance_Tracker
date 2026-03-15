@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "vite build && cp _redirects dist/_redirects && cp _headers dist/_headers",
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@syncfusion/ej2-react-calendars": "^32.2.7",
