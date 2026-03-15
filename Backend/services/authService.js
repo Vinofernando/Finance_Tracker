@@ -39,6 +39,9 @@ export const register = async ({ username, email, password }) => {
     );
 
     // await sendVerification(email, verifiedToken);
+    await client.query("COMMIT");
+
+    sendVerification(email, verifiedToken).catch(console.error);
     return {
       message: "Registered successfully pleas check ur email for verification",
     };
