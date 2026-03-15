@@ -7,7 +7,8 @@ const { Pool } = pkg;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // Wajib ada untuk koneksi ke Supabase/Cloud DB
+    rejectUnauthorized: true,
+    sslmode: "verify-full",
   },
 });
 
