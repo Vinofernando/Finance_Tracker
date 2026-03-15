@@ -7,13 +7,13 @@ export const register = async (req, res, next) => {
     res.json(result);
   } catch (error) {
     console.log("--- ERROR REGISTER ---");
-    console.error(error.message); // Ini akan muncul di log Railway kamu
+    console.error(error); // Ini akan muncul di log Railway kamu
     console.log("-----------------------");
 
     res.status(500).json({
       error: true,
-      message: "Internal server error",
-      dev_msg: error.message, // Tambahkan ini sementara agar bisa lihat error di Postman
+      message: error.message,
+      dev_msg: error.stack, // Tambahkan ini sementara agar bisa lihat error di Postman
     });
   }
 };
