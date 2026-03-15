@@ -15,7 +15,6 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendVerification = async (toEmail, token) => {
-  // Gunakan ENV agar link berubah otomatis saat di production (bukan localhost terus)
   const baseUrl =
     process.env.FRONTEND_URL || "https://FinanceTrackerV.netlify.app";
   const link = `${baseUrl}/success-verification?token=${token}`;
@@ -29,7 +28,7 @@ export const sendVerification = async (toEmail, token) => {
     });
 
     if (error) {
-      console.error("Email error:", error);
+      console.error("Email error:", error, process.env.RESEND_API_KEY);
     } else {
       console.log("Email sent:", data);
     }
