@@ -27,7 +27,7 @@ export default function AdminDashboard() {
       try {
         setLoading(true);
         const res = await fetch(
-          `http://localhost:5000/api/transaction/users${userId ? `?userId=${userId}` : ""}  `,
+          `https://api.finance-tracker.store/api/transaction/users${userId ? `?userId=${userId}` : ""}  `,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 

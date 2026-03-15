@@ -46,12 +46,12 @@ export default function Dashboard() {
       return;
     }
 
-    const url = `http://localhost:5000/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}`;
+    const url = `https://api.finance-tracker.store/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}`;
     Promise.all([
       fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       }).then((res) => res.json()),
-      fetch("http://localhost:5000/api/transaction/summary", {
+      fetch("https://api.finance-tracker.store/api/transaction/summary", {
         headers: { Authorization: `Bearer ${token}` },
       }).then((res) => res.json()),
     ])

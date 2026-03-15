@@ -19,7 +19,7 @@ export default function AddPages() {
         navigate("/login");
       }
       const response = await fetch(
-        "http://localhost:5000/api/transaction/add-transaction",
+        "https://api.finance-tracker.store/api/transaction/add-transaction",
         {
           method: "POST",
           headers: {

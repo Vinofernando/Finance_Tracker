@@ -13,11 +13,14 @@ export default function Login() {
     setError(null); // Reset error setiap klik login
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }), // WAJIB Stringify
-      });
+      const response = await fetch(
+        "https://api.finance-tracker.store/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }), // WAJIB Stringify
+        },
+      );
 
       const data = await response.json(); // Ambil datanya
 

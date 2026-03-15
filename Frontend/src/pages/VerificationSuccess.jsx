@@ -16,7 +16,7 @@ export default function VerificationSuccess() {
 
       try {
         const res = await fetch(
-          `http://localhost:5000/api/auth/verify?token=${token}`,
+          `https://api.finance-tracker.store/api/auth/verify?token=${token}`,
         );
         const data = await res.json();
 
