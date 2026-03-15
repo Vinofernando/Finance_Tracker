@@ -6,11 +6,10 @@ const { Pool } = pkg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL.includes("localhost")
-    ? false // Matikan SSL jika konek ke DB lokal
-    : {
-        rejectUnauthorized: false, // Seringkali dibutuhkan untuk cloud DB jika tidak punya file CA
-      },
+  ssl: {
+    // Railway ke Cloud DB biasanya butuh ini agar tidak ditolak koneksinya
+    rejectUnauthorized: false,
+  },
 });
 
 pool.on("error", (err) => {
