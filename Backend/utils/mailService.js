@@ -21,7 +21,7 @@ export const sendVerification = async (toEmail, token) => {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Finance Tracker <onboarding@resend.dev>",
+      from: "Finance Tracker <noreply@financetracker.site>",
       to: toEmail,
       subject: "Verifikasi Email Anda",
       html: `<a href="${link}">Verifikasi Email</a>`,
