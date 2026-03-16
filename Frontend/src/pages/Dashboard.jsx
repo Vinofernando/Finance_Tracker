@@ -35,6 +35,26 @@ export default function Dashboard() {
 
   const navigate = useNavigate();
 
+  async function handleDeleteTransaction(transactionId) {
+    if (confirm("Apakah kamu yakin ini menghapus transaksi ini ?") == true) {
+      try {
+        await fetch(
+          `https://api.finance-tracker.store/api/transaction/delete-transaction/${transactionId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    } else {
+      return;
+    }
+  }
   useEffect(() => {
     if (!token || checkExpiredToken(token) < new Date()) {
       navigate("/login");
@@ -77,27 +97,6 @@ export default function Dashboard() {
     if (confirm("Apa kamu yakin ingin logout ?") == true) {
       localStorage.clear();
       navigate("/login");
-    } else {
-      return;
-    }
-  }
-
-  async function handleDeleteTransaction(transactionId) {
-    if (confirm("Apakah kamu yakin ini menghapus transaksi ini ?") == true) {
-      try {
-        await fetch(
-          `https://api.finance-tracker.store/api/transaction/delete-transaction/${transactionId}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-      } catch (error) {
-        console.error("Fetch error:", error);
-      }
     } else {
       return;
     }
