@@ -37,8 +37,6 @@ export const register = async ({ username, email, password }) => {
     `,
       [username, email, hashedPassword, verifiedToken, expiresAt],
     );
-
-    // await sendVerification(email, verifiedToken);
     await client.query("COMMIT");
 
     sendVerification(email, verifiedToken).catch(console.error);

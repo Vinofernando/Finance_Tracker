@@ -1,2 +1,4 @@
 .env
 acces.log
+.nodemonignore
+node_modules
