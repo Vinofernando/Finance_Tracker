@@ -39,7 +39,7 @@ export default function Dashboard() {
   async function handleDeleteTransaction(transactionId) {
     if (confirm("Apakah kamu yakin ini menghapus transaksi ini ?") == true) {
       try {
-        await fetch(
+        const response = await fetch(
           `https://api.finance-tracker.store/api/transaction/delete-transaction/${transactionId}`,
           {
             method: "DELETE",
@@ -49,7 +49,12 @@ export default function Dashboard() {
             },
           },
         );
-        setRefreshSignal((prev) => prev + 1);
+
+        if (response.ok) {
+          // HANYA panggil trigger di sini setelah sukses delete
+          setRefreshSignal((prev) => prev + 1);
+          alert("Transaksi berhasil dihapus!");
+        }
       } catch (error) {
         console.error("Fetch error:", error);
       }
