@@ -54,7 +54,7 @@ export default function AdminDashboard() {
     try {
       if (confirm("Apa kamu ingin menghapus akun ini ?") == true) {
         const fetchDeleteUser = await fetch(
-          `http://localhost:5000/api/auth/delete/${userId}`,
+          `https://api.finance-tracker.store/api/auth/delete/${userId}`,
           {
             method: "DELETE",
             headers: {
