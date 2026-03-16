@@ -103,6 +103,8 @@ export default function Dashboard() {
     }
   }
 
+  useEffect(() => {}, [data, summary]);
+
   if (isLoading) {
     return <div className="loading-center">Memuat data keuangan...</div>;
   }
