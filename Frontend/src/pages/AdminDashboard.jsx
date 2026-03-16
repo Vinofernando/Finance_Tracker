@@ -45,7 +45,7 @@ export default function AdminDashboard() {
       }
     }
     fetchUsers();
-  }, [userId, token, navigate]);
+  }, [userId, token, navigate, userList]);
 
   useEffect(() => {
     setIsClient(true);
