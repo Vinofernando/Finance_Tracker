@@ -47,11 +47,12 @@ export const newTransaction = async ({
   categoryId,
   description,
 }) => {
-  if (!amount || !type || !categoryId || !description)
-    throw { status: 400, message: "All field required" };
+  if (!amount || !type || !categoryId || !description || amount <= 0)
+    throw {
+      status: 400,
+      message: "All field required and Amount cannot equal or less than zero",
+    };
 
-  if (amount <= 0)
-    throw { status: 400, message: "Amount cannot equal or less than zero" };
   let finalAmount = Number(amount);
 
   if (type.toLowerCase() === "expense") {
