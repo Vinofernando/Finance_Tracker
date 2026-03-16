@@ -291,3 +291,26 @@
   border-bottom: 1px black solid;
   border-top: 1px solid black;
 }
+
+@media (max-width: 600px) {
+  h1,
+  h2,
+  h3,
+  p {
+    font-size: 70%;
+  }
+
+  .balance-card {
+    padding: 15px;
+  }
+  .balance-card h1 {
+    font-size: 70%;
+  }
+  .card-left {
+    flex-direction: column;
+  }
+
+  .transaction-card {
+    flex-direction: column;
+  }
+}
