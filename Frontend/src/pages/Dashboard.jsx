@@ -86,7 +86,7 @@ export default function Dashboard() {
     if (confirm("Apakah kamu yakin ini menghapus transaksi ini ?") == true) {
       try {
         await fetch(
-          `http://localhost:5000/api/transaction/delete-transaction/${transactionId}`,
+          `https://api.finance-tracker.store/api/transaction/delete-transaction/${transactionId}`,
           {
             method: "DELETE",
             headers: {
