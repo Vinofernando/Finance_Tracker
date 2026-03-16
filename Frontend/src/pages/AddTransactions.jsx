@@ -83,6 +83,7 @@ export default function AddPages() {
           <option value={2}>Makanan/minuman</option>
           <option value={3}>Pemindahan dana</option>
           <option value={4}>Gaji</option>
+          <option value={5}>Lainnya</option>
         </select>
         <input
           type="text"
