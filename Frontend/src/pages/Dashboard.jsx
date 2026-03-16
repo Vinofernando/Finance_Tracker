@@ -18,6 +18,7 @@ export default function Dashboard() {
   const dropdownRef = useRef(null);
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [filter, setFilter] = useState("all");
+  const [refreshSignal, setRefreshSignal] = useState(0);
 
   // Fungsi pembantu (helper) untuk format YYYY-MM-DD lokal
   const formatDate = (date) => {
@@ -48,6 +49,7 @@ export default function Dashboard() {
             },
           },
         );
+        setRefreshSignal((prev) => prev + 1);
       } catch (error) {
         console.error("Fetch error:", error);
       }
@@ -81,7 +83,7 @@ export default function Dashboard() {
       })
       .catch((err) => console.error("Fetch error:", err))
       .finally(() => setIsLoading(false));
-  }, [token, navigate, sort, role, start, end, today, filter, data, summary]);
+  }, [token, navigate, sort, role, start, end, today, filter, refreshSignal]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
