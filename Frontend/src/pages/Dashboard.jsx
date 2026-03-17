@@ -53,7 +53,9 @@ export default function Dashboard() {
         if (response.ok) {
           // HANYA panggil trigger di sini setelah sukses delete
           // setData((prevData) => prevData.filter((t) => t.transaction_id !== transactionId))
-          setRefreshSignal((prev) => prev + 1);
+          setTimeout(() => {
+            setRefreshSignal((prev) => prev + 1);
+          }, 500);
           alert("Transaksi berhasil dihapus!");
         }
       } catch (error) {
