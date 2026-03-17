@@ -51,8 +51,13 @@ export default function Dashboard() {
         );
 
         if (response.ok) {
-          setRefreshSignal((prev) => prev + 1);
-          alert("Transaksi berhasil dihapus!");
+          alert("Data sebelum: " + data.length);
+          setData((prevData) => {
+            const filtered = prevData.filter((t) => t.id !== transactionId);
+            setRefreshSignal((prev) => prev + 1);
+            alert("Data sesudah: " + filtered.length);
+            return filtered;
+          });
         }
       } catch (error) {
         console.error("Fetch error:", error);
