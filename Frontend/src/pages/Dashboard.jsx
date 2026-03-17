@@ -53,7 +53,9 @@ export default function Dashboard() {
         if (response.ok) {
           alert("Data sebelum: " + data.length);
           setData((prevData) => {
-            const filtered = prevData.filter((t) => t.id !== transactionId);
+            const filtered = prevData.filter(
+              (t) => t.transaction_id !== transactionId,
+            );
             setRefreshSignal((prev) => prev + 1);
             alert("Data sesudah: " + filtered.length);
             return filtered;
