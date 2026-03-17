@@ -51,15 +51,10 @@ export default function Dashboard() {
         );
 
         if (response.ok) {
-          alert("Data sebelum: " + data.length);
-          setData((prevData) => {
-            const filtered = prevData.filter(
-              (t) => t.transaction_id !== transactionId,
-            );
+          setTimeout(() => {
             setRefreshSignal((prev) => prev + 1);
-            alert("Data sesudah: " + filtered.length);
-            return filtered;
-          });
+          }, 500);
+          alert("Transaksi berhasil dihapus!");
         }
       } catch (error) {
         console.error("Fetch error:", error);
@@ -79,7 +74,7 @@ export default function Dashboard() {
       return;
     }
 
-    const url = `https://api.finance-tracker.store/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}&t=${refreshSignal}`;
+    const url = `https://api.finance-tracker.store/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}`;
     Promise.all([
       fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
