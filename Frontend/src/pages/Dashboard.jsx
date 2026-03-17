@@ -51,7 +51,9 @@ export default function Dashboard() {
         );
 
         if (response.ok) {
-          setData((prevData) => prevData.filter((t) => t.id !== transactionId));
+          setData((prevData) =>
+            prevData.filter((t) => t.transaction_id !== transactionId),
+          );
 
           setRefreshSignal((prev) => prev + 1);
           alert("Transaksi berhasil dihapus!");
