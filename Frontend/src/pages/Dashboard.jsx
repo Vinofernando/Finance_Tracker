@@ -18,7 +18,7 @@ export default function Dashboard() {
   const dropdownRef = useRef(null);
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [filter, setFilter] = useState("all");
-  // const [refreshSignal, setRefreshSignal] = useState(0);
+  const [refreshSignal, setRefreshSignal] = useState(0);
 
   // Fungsi pembantu (helper) untuk format YYYY-MM-DD lokal
   const formatDate = (date) => {
@@ -52,7 +52,7 @@ export default function Dashboard() {
 
         if (response.ok) {
           // HANYA panggil trigger di sini setelah sukses delete
-          // setRefreshSignal((prev) => prev + 1);
+          setRefreshSignal((prev) => prev + 1);
           alert("Transaksi berhasil dihapus!");
         }
       } catch (error) {
@@ -88,7 +88,7 @@ export default function Dashboard() {
       })
       .catch((err) => console.error("Fetch error:", err))
       .finally(() => setIsLoading(false));
-  }, [token, navigate, sort, role, start, end, today, filter, data]);
+  }, [token, navigate, sort, role, start, end, today, filter, refreshSignal]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
