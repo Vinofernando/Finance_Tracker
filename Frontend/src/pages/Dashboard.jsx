@@ -52,7 +52,9 @@ export default function Dashboard() {
 
         if (response.ok) {
           // HANYA panggil trigger di sini setelah sukses delete
-          setRefreshSignal((prev) => prev + 1);
+          setTimeout(() => {
+            setRefreshSignal((prev) => prev + 1);
+          }, 500);
           alert("Transaksi berhasil dihapus!");
         }
       } catch (error) {
