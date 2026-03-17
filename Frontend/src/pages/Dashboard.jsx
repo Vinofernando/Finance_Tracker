@@ -73,7 +73,7 @@ export default function Dashboard() {
       return;
     }
 
-    const url = `https://api.finance-tracker.store/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}`;
+    const url = `https://api.finance-tracker.store/api/transaction?order=${sort || "asc"}${filter === "all" ? "" : `&start=${start || today}&end=${end || today}`}&t=${refreshSignal}`;
     Promise.all([
       fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
