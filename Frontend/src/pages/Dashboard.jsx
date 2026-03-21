@@ -120,6 +120,9 @@ export default function Dashboard() {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div>
+          <Link to={"/about"} className="dashboard-about">
+            About
+          </Link>
           <h2 className="welcome-text">Halo, Selamat Datang {name}!</h2>
           <p className="date-text">
             {new Date().toLocaleDateString("id-ID", {
