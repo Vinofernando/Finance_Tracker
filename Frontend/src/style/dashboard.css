@@ -15,6 +15,15 @@
   margin-bottom: 20px;
 }
 
+a.dashboard-about {
+  color: black;
+  text-decoration: none;
+  transition: all ease 0.2s;
+}
+a.dashboard-about:hover {
+  color: gray;
+}
+
 .welcome-text {
   margin: 0;
   font-size: 18px;
