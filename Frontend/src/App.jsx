@@ -1,6 +1,7 @@
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddPages from "./pages/AddTransactions";
+import About from "./pages/About";
 import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 import VerificationSuccess from "./pages/VerificationSuccess";
 import Register from "./pages/Register";
@@ -19,6 +20,7 @@ function App() {
           element={<VerificationSuccess />}
         />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );
