@@ -63,7 +63,19 @@ button.register-btn {
 button.reset-visible {
   position: absolute;
   top: 55.8%;
-  right: 38.1px;
+  right: 80.1px;
+  transform: translateY(-50%);
+  background: none;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  cursor: pointer;
+}
+button.reset-pass-visible {
+  position: absolute;
+  top: 50.5%;
+  right: 80.1px;
   transform: translateY(-50%);
   background: none;
   border-width: medium;

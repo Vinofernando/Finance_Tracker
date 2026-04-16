@@ -24,6 +24,7 @@ form.login-form,
 form.register-form {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .register-form input {
@@ -66,7 +67,7 @@ button.register-btn {
 button.login-reset-visible {
   position: absolute;
   top: 53.8%;
-  right: 39.1px;
+  right: 80px;
   transform: translateY(-50%);
   background: none;
   border-width: medium;
@@ -78,7 +79,7 @@ button.login-reset-visible {
 button.register-reset-visible {
   position: absolute;
   top: 68.4%;
-  right: 39.1px;
+  right: 80px;
   transform: translateY(-50%);
   background: none;
   border-width: medium;
