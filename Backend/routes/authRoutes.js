@@ -1,4 +1,10 @@
-import { login, register, deleteUser } from "../controllers/authControllers.js";
+import {
+  login,
+  register,
+  deleteUser,
+  forgotPassword,
+  resetPassword,
+} from "../controllers/authControllers.js";
 import { verifyEmail } from "../controllers/verifyController.js";
 import authorizeRole from "../utils/authorizeRole.js";
 import { authenticatedToken } from "../middleware/authenticatedToken.js";
@@ -15,5 +21,7 @@ router.delete(
   authorizeRole("admin"),
   deleteUser,
 );
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 export default router;

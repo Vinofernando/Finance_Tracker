@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import pool from "../config/db.js";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
-import { sendVerification } from "../utils/mailService.js";
+import { sendVerification, sendResetPassLink } from "../utils/mailService.js";
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -104,10 +104,90 @@ export const deleteUser = async (userId, role) => {
 
   if (result.rowCount === 0) throw { status: 400, message: "User not found" };
   if (result.rows[0].role === "admin")
-    throw { status: 400, message: "Tidak bisa menghapus role admin" };
+    throw { status: 400, message: "Can delete admin role" };
 
   return {
     message: "Delete user successfully",
     result: result.rows[0],
+  };
+};
+
+export const forgotPassword = async (email) => {
+  if (!email) throw { status: 400, message: "Email is empty" };
+
+  const emailExisted = await pool.query(
+    `
+      SELECT * FROM users WHERE user_email = $1 AND is_verified = $2
+    `,
+    [email, true],
+  );
+
+  if (emailExisted.rows.length === 0)
+    throw {
+      status: 200,
+      message: "Link for reset password sended, please check your email",
+    };
+
+  const expiresAt = new Date();
+  expiresAt.setMinutes(expiresAt.getMinutes() + 30);
+
+  const reset_password_token = uuidv4();
+
+  await pool.query(
+    `
+      UPDATE users
+      set reset_password_token = $1, reset_password_expires = $2
+      WHERE user_email = $3
+    `,
+    [reset_password_token, expiresAt, email],
+  );
+
+  await sendResetPassLink(email, reset_password_token);
+  return {
+    status: 200,
+    message: "Link for reset password sended, please check your email",
+  };
+};
+
+export const resetPassword = async (newPassword, resetToken) => {
+  const existedToken = await pool.query(
+    `SELECT * FROM users where reset_password_token = $1`,
+    [resetToken],
+  );
+
+  if (existedToken.rows.length === 0)
+    throw { status: 400, message: "Token tidak valid" };
+
+  const expiredToken = existedToken.rows[0].reset_password_expires;
+  const email = existedToken.rows[0].user_email;
+
+  if (new Date(expiredToken) < new Date()) {
+    await pool.query(
+      `UPDATE users SET reset_password_token = null, reset_password_expires = null WHERE user_email = $1`,
+      [user.user_email],
+    );
+    throw {
+      status: 400,
+      message: "Link sudah kedaluwarsa, silakan ajukan permintaan baru.",
+    };
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const result = await pool.query(
+    `
+        UPDATE users 
+        SET user_password = $1, reset_password_token = null, reset_password_expires = null
+        WHERE reset_password_token = $2
+        RETURNING *
+      `,
+    [hashedPassword, resetToken],
+  );
+
+  if (result.rows.length === 0)
+    throw { status: 400, message: "Gagal mereset password" };
+
+  return {
+    status: 201,
+    message: "Password berhasil di reset silahkan login",
   };
 };

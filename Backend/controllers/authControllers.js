@@ -42,3 +42,24 @@ export const deleteUser = async (req, res, next) => {
     return next(err);
   }
 };
+
+export const forgotPassword = async (req, res, next) => {
+  try {
+    const forgotResult = await authService.forgotPassword(req.body.email);
+    res.json(forgotResult);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const resetPassword = async (req, res, next) => {
+  try {
+    const resetPassResult = await authService.resetPassword(
+      req.body.newPassword,
+      req.query.token,
+    );
+    res.json(resetPassResult);
+  } catch (err) {
+    return next(err);
+  }
+};
