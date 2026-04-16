@@ -15,8 +15,8 @@ export default function Register() {
 
   async function handleRegister(e) {
     e.preventDefault();
+    setDisabled(true);
     try {
-      setDisabled(true);
       setLoading(true);
       const response = await fetch(
         "https://api.finance-tracker.store/api/auth/register",
@@ -47,9 +47,11 @@ export default function Register() {
       setLoading(true);
       alert(data.message);
     } catch (err) {
+      setDisabled(false);
       setError(err.message);
       console.error("(register) Gagal fetch:", err);
     } finally {
+      setDisabled(false);
       setLoading(false);
     }
   }

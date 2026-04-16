@@ -38,17 +38,21 @@ export default function ResetPassword() {
       const data = await response.json();
       if (!response.ok) {
         setLoading(false);
+        setDisabled(false);
         throw new Error(data.message || "Error");
       }
+      setDisabled(false);
       setLoading(true);
       alert(data.message);
       setTimeout(() => {
         navigate("/login");
       });
     } catch (err) {
+      setDisabled(false);
       setError(err.message);
       console.error("(forgot) Gagal fetch:", err);
     } finally {
+      setDisabled(false);
       setLoading(false);
     }
   }

@@ -54,6 +54,9 @@ export default function Login() {
         setDisabled(false);
       }, 300);
     } catch (err) {
+      setTimeout(() => {
+        setDisabled(false);
+      }, 300);
       setError(err.message);
       console.error("CORS atau Network Error:", err);
     }
