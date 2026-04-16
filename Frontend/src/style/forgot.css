@@ -1,4 +1,4 @@
-.login-container,
+.forgot-container,
 .register-container {
   height: 80vh;
   display: flex;
@@ -9,7 +9,7 @@
   background-color: #f8f9fa;
 }
 
-.login-card,
+.forgot-card,
 .register-card {
   background-color: white;
   min-width: 20%;
@@ -20,10 +20,11 @@
   flex-direction: column;
   border-radius: 8px;
 }
-form.login-form,
+form.forgot-form,
 form.register-form {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .register-form input {
@@ -38,7 +39,7 @@ input {
 input:focus {
   outline: none;
 }
-button.login-btn,
+button.forgot-btn,
 button.register-btn {
   background-color: dodgerblue;
   border: none;
@@ -48,37 +49,21 @@ button.register-btn {
   cursor: pointer;
 }
 
-.login-not-have-acc,
-.register-have-acc {
+.forgot-not-have-acc,
+.forgot-have-acc {
   text-decoration: none;
   color: gray;
   transition: all ease 0.2s;
 }
-.register-have-acc:hover,
-.login-not-have-acc:hover {
+.forgot-have-acc:hover,
+.forgot-not-have-acc:hover {
   color: black;
 }
 
-.forgot-btn:focus {
-  background-color: black;
-}
-
-button.login-reset-visible {
+button.reset-visible {
   position: absolute;
-  top: 53.8%;
-  right: 39.1px;
-  transform: translateY(-50%);
-  background: none;
-  border-width: medium;
-  border-style: none;
-  border-color: currentcolor;
-  border-image: initial;
-  cursor: pointer;
-}
-button.register-reset-visible {
-  position: absolute;
-  top: 68.4%;
-  right: 39.1px;
+  top: 55.8%;
+  right: 38.1px;
   transform: translateY(-50%);
   background: none;
   border-width: medium;
@@ -88,10 +73,17 @@ button.register-reset-visible {
   cursor: pointer;
 }
 @media (max-width: 600px) {
-  button.register-reset-visible {
+  h1,
+  h2,
+  h3,
+  p {
+    font-size: 100%;
+  }
+
+  button.reset-visible {
     position: absolute;
-    top: 63.4%;
-    right: 39.1px;
+    top: 49.1%;
+    right: 37px;
     transform: translateY(-50%);
     background: none;
     border-width: medium;
@@ -100,9 +92,10 @@ button.register-reset-visible {
     border-image: initial;
     cursor: pointer;
   }
-  button.login-reset-visible {
+
+  button.reset-pass-visible {
     position: absolute;
-    top: 50.6%;
+    top: 50.5%;
     right: 39.1px;
     transform: translateY(-50%);
     background: none;

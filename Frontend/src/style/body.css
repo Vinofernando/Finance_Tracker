@@ -1,3 +1,7 @@
 body {
   font-family: "Segoe UI", Roboto, sans-serif;
 }
+
+button:focus {
+  background-color: black;
+}

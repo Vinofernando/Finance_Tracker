@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
+import { PasswordVisible } from "../components/PasswordVisible";
 import "../style/login.css";
 
 export default function Register() {
@@ -8,10 +10,13 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleRegister(e) {
     e.preventDefault();
     try {
+      setDisabled(true);
       setLoading(true);
       const response = await fetch(
         "https://api.finance-tracker.store/api/auth/register",
@@ -31,8 +36,14 @@ export default function Register() {
       const data = await response.json();
       if (!response.ok) {
         setLoading(false);
+        setTimeout(() => {
+          setDisabled(false);
+        }, 400);
         throw new Error(data.message || "Error");
       }
+      setTimeout(() => {
+        setDisabled(false);
+      }, 400);
       setLoading(true);
       alert(data.message);
     } catch (err) {
@@ -52,9 +63,16 @@ export default function Register() {
       return () => clearTimeout(timer);
     });
   }, [error]);
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <div className="register-container">
-      <div className="register-card">
+      <div
+        className="register-card"
+        style={{ position: "relative", width: "300px" }}
+      >
         <h1>Register</h1>
         <form onSubmit={handleRegister} className="register-form">
           <input
@@ -70,13 +88,27 @@ export default function Register() {
             placeholder="email"
           />
           <input
-            type="text"
-            value={password || ""}
+            type={showPassword ? "text" : "password"}
+            placeholder="Masukkan password"
+            style={{ paddingRight: "40px" }}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="password"
           />
-          <button type="submit" className="register-btn">
-            Register
+          <button
+            className="register-reset-visible"
+            type="button"
+            onClick={togglePassword}
+          >
+            {" "}
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}{" "}
+          </button>
+          <button
+            type="submit"
+            className="forgot-btn"
+            disabled={disabled}
+            style={disabled ? { bacgroundColor: "black" } : { color: "white" }}
+          >
+            submit
           </button>
         </form>
         <Link to="/login" className="register-have-acc">
