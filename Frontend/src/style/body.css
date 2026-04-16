@@ -2,6 +2,6 @@ body {
   font-family: "Segoe UI", Roboto, sans-serif;
 }
 
-button:focus {
+button.forgot-button:focus {
   background-color: black;
 }

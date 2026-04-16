@@ -9,9 +9,11 @@ export default function AddPages() {
   const [type, setType] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
 
   async function formHandler(e) {
+    setDisabled(true);
     e.preventDefault();
 
     try {
@@ -39,10 +41,19 @@ export default function AddPages() {
         const errorData = await response.json();
         console.error("Server Error:", errorData);
         alert(`Error: ${errorData.message || "Terjadi kesalahan pada server"}`);
+        setTimeout(() => {
+          setDisabled(false);
+        }, 300);
         return;
       }
+      setTimeout(() => {
+        setDisabled(false);
+      }, 300);
       alert("Transaksi berhasil ditambahkan!");
     } catch (error) {
+      setTimeout(() => {
+        setDisabled(false);
+      }, 300);
       return <div>{error.message}</div>;
     }
   }
@@ -91,7 +102,9 @@ export default function AddPages() {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
         />
-        <button type="submit">Add</button>
+        <button type="submit" disabled={disabled}>
+          Add
+        </button>
       </form>
     </div>
   );
