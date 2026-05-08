@@ -1,17 +1,16 @@
 .dashboard-container-add {
-  max-width: 500px;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 20px;
   font-family: "Segoe UI", Roboto, sans-serif;
-  background-color: #f8f9fa;
-  min-height: 80vh;
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 10px;
-  border-radius: 8px;
-  box-shadow: 1px 5px 17px 5px rgba(0, 0, 0, 0.52);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 form.add-transaction-form {
@@ -20,19 +19,10 @@ form.add-transaction-form {
   width: 50%;
   gap: 10px;
 }
-.add-transaction-back {
-  display: flex;
-  justify-content: center;
-  background-color: dodgerblue;
-  border-radius: 8px;
-  text-decoration: none;
-  color: white;
-  transition: background-color ease-in 0.1s;
-  width: 50%;
-}
 
 .add-transaction-back:hover {
-  background-color: orange;
+  background-color: red;
+  color: white;
 }
 
 .dashboard-container-add select {
@@ -45,4 +35,21 @@ form.add-transaction-form {
 }
 .dashboard-container-add select option:hover {
   background-color: green;
+}
+
+button.add-btn {
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+button.add-btn-disabled {
+  background-color: gray;
+  color: white;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+button.add-btn:hover {
+  background-color: gray;
 }
