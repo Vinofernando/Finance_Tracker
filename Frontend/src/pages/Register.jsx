@@ -2,13 +2,21 @@ import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PasswordVisible } from "../components/PasswordVisible";
+import useAuthStore from "../state/authStore";
 import "../style/login.css";
 
 export default function Register() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const {
+    username,
+    setUsername,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    setError,
+  } = useAuthStore();
+  // const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -64,7 +72,7 @@ export default function Register() {
 
       return () => clearTimeout(timer);
     });
-  }, [error]);
+  }, [error, setError]);
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -89,21 +97,23 @@ export default function Register() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email"
           />
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Masukkan password"
-            style={{ paddingRight: "40px" }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            className="register-reset-visible"
-            type="button"
-            onClick={togglePassword}
-          >
-            {" "}
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}{" "}
-          </button>
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Masukkan password"
+              style={{ paddingRight: "40px" }}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              className="register-reset-visible"
+              type="button"
+              onClick={togglePassword}
+            >
+              {" "}
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}{" "}
+            </button>
+          </div>
           <button
             type="submit"
             className="forgot-btn"
