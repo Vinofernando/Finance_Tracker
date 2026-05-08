@@ -60,29 +60,29 @@ button.register-btn {
   color: black;
 }
 
-button.reset-visible {
-  position: absolute;
-  top: 55.8%;
-  right: 80.1px;
-  transform: translateY(-50%);
-  background: none;
-  border-width: medium;
-  border-style: none;
-  border-color: currentcolor;
-  border-image: initial;
-  cursor: pointer;
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: #f9f9f9;
 }
-button.reset-pass-visible {
-  position: absolute;
-  top: 50.5%;
-  right: 80.1px;
-  transform: translateY(-50%);
+
+.input-group input {
+  flex: 1; /* Mengambil sisa ruang */
+  border: none;
+  background: transparent;
+  padding: 12px;
+  outline: none;
+}
+
+.input-group button {
   background: none;
-  border-width: medium;
-  border-style: none;
-  border-color: currentcolor;
-  border-image: initial;
+  border: none;
   cursor: pointer;
+  padding: 10px;
+  display: flex;
+  align-items: center;
 }
 @media (max-width: 600px) {
   h1,
@@ -90,31 +90,5 @@ button.reset-pass-visible {
   h3,
   p {
     font-size: 100%;
-  }
-
-  button.reset-visible {
-    position: absolute;
-    top: 49.1%;
-    right: 37px;
-    transform: translateY(-50%);
-    background: none;
-    border-width: medium;
-    border-style: none;
-    border-color: currentcolor;
-    border-image: initial;
-    cursor: pointer;
-  }
-
-  button.reset-pass-visible {
-    position: absolute;
-    top: 50.5%;
-    right: 39.1px;
-    transform: translateY(-50%);
-    background: none;
-    border-width: medium;
-    border-style: none;
-    border-color: currentcolor;
-    border-image: initial;
-    cursor: pointer;
   }
 }
