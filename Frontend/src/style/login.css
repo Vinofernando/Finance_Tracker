@@ -1,116 +1,101 @@
-.login-container,
-.register-container {
-  height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  font-family: "Segoe UI", Roboto, sans-serif;
-  background-color: #f8f9fa;
+@import "tailwindcss";
+
+/* Container Utama: Memastikan form ada di tengah layar */
+.login-container {
+  @apply min-h-screen w-full flex items-center justify-center;
+  font-family: "Inter", sans-serif; /* Opsional: ganti sesuai font projectmu */
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.74) 0%,
+    rgba(247, 183, 247, 1) 95%
+  );
 }
 
-.login-card,
-.register-card {
-  background-color: white;
-  min-width: 20%;
-  min-height: 50%;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px;
+/* Margin/Wrapper flex: Membagi area gambar dan area form */
+.margin.flex {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.74) 0%,
+    rgba(255, 255, 161, 1) 100%
+  );
+  padding: 20px;
+  width: 80%;
 }
-form.login-form,
-form.register-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.margin.flex {
+  @apply h-[733px] rounded-2xl shadow-2xl overflow-hidden flex-row-reverse;
 }
 
-.register-form input {
-  margin: 10px 0;
+/* Bagian Gambar */
+.login-img {
+  width: 70%;
 }
-input {
-  border-radius: 8px;
-  border: 2px solid rgba(146, 146, 146, 0.315);
-  padding: 5px 10px;
-  size: 20%;
+.login-img img {
+  width: 100%;
+  height: 100%;
 }
-input:focus {
-  outline: none;
-}
-button.login-btn,
-button.register-btn {
-  background-color: dodgerblue;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 5px;
-  color: white;
-  cursor: pointer;
+.login-img {
+  @apply hidden md:block relative;
 }
 
-.login-not-have-acc,
-.register-have-acc {
-  text-decoration: none;
-  color: gray;
-  transition: all ease 0.2s;
+/* Kartu Form Login */
+.login-card {
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 30%;
 }
-.register-have-acc:hover,
-.login-not-have-acc:hover {
-  color: black;
+.login-card {
+  @apply p-8 md:p-12 flex flex-col justify-center items-center;
 }
 
-.forgot-btn:focus {
-  background-color: black;
+.login-card h2 {
+  @apply text-3xl font-bold text-gray-800 mb-8 self-start;
 }
 
-button.login-reset-visible {
-  position: absolute;
-  top: 53.8%;
-  right: 80px;
-  transform: translateY(-50%);
-  background: none;
-  border-width: medium;
-  border-style: none;
-  border-color: currentcolor;
-  border-image: initial;
-  cursor: pointer;
+/* Form Layout */
+.login-form {
+  @apply w-full flex flex-col gap-4;
 }
-button.register-reset-visible {
-  position: absolute;
-  top: 68.4%;
-  right: 80px;
-  transform: translateY(-50%);
-  background: none;
-  border-width: medium;
-  border-style: none;
-  border-color: currentcolor;
-  border-image: initial;
-  cursor: pointer;
+
+/* Styling Input Standar */
+.login-form input[type="email"],
+.input-group {
+  @apply w-full border border-gray-300 rounded-lg px-4 py-3 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all outline-none;
 }
-@media (max-width: 600px) {
-  button.register-reset-visible {
-    position: absolute;
-    top: 63.4%;
-    right: 39.1px;
-    transform: translateY(-50%);
-    background: none;
-    border-width: medium;
-    border-style: none;
-    border-color: currentcolor;
-    border-image: initial;
-    cursor: pointer;
+
+/* Input Group untuk Password (agar tombol mata ada di dalam) */
+.input-group {
+  @apply flex items-center p-0 overflow-hidden;
+}
+
+.input-group input {
+  @apply flex-grow bg-transparent border-none focus:ring-0;
+}
+
+/* Submit Button */
+.forgot-btn {
+  @apply w-full py-3 mt-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md active:scale-[0.98];
+}
+
+/* Link Style (Register & Forgot Password) */
+.login-not-have-acc {
+  @apply mt-4 text-sm text-gray-500 hover:text-blue-600 transition-colors self-start;
+}
+
+/* Error Message */
+.error-msg {
+  @apply w-full p-3 mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg;
+}
+
+@media screen and (max-width: 1200px) {
+  .login-img img {
+    display: none;
   }
-  button.login-reset-visible {
-    position: absolute;
-    top: 50.6%;
-    right: 39.1px;
-    transform: translateY(-50%);
-    background: none;
-    border-width: medium;
-    border-style: none;
-    border-color: currentcolor;
-    border-image: initial;
-    cursor: pointer;
+  .margin.flex {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .login-card {
+    width: 100%;
   }
 }
