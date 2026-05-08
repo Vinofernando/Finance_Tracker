@@ -1,13 +1,23 @@
+import express from "express";
 import * as transactionService from "../services/transactionsService.js";
-
-export const getUserTransaction = async (req, res, next) => {
-  console.log(req.query);
+import type {
+  GetUserControl,
+  GetUserTransactionControl,
+  NewTransactionControl,
+  SumTransactionsControl,
+  deleteTransactionControl,
+} from "../interfaces/interfaces.js";
+export const getUserTransaction = async (
+  req: GetUserTransactionControl,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
   try {
     const userTransactions = await transactionService.getUserTransaction(
       Number(req.user.userId),
       req.query.start,
       req.query.end,
-      req.query.order || null,
+      req.query.order,
     );
     res.json(userTransactions);
   } catch (err) {
@@ -15,7 +25,11 @@ export const getUserTransaction = async (req, res, next) => {
   }
 };
 
-export const newTransaction = async (req, res, next) => {
+export const newTransaction = async (
+  req: NewTransactionControl,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
   try {
     const addTransactions = await transactionService.newTransaction({
       userId: req.user.userId,
@@ -30,7 +44,11 @@ export const newTransaction = async (req, res, next) => {
   }
 };
 
-export const deleteTransaction = async (req, res, next) => {
+export const deleteTransaction = async (
+  req: deleteTransactionControl,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
   try {
     const deleteTransaction = await transactionService.deleteTransaction(
       req.user.userId,
@@ -42,7 +60,11 @@ export const deleteTransaction = async (req, res, next) => {
   }
 };
 
-export const sumTransactions = async (req, res, next) => {
+export const sumTransactions = async (
+  req: SumTransactionsControl,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
   try {
     const sumTransactions = await transactionService.sumTransactions(
       req.user.userId,
@@ -53,7 +75,11 @@ export const sumTransactions = async (req, res, next) => {
   }
 };
 
-export const getUser = async (req, res, next) => {
+export const getUser = async (
+  req: GetUserControl,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
   try {
     const user = await transactionService.getUser(req.query.userId);
     res.json(user);

@@ -1,8 +1,9 @@
 import pool from "../config/db.js";
 import { v4 as uuidv4 } from "uuid";
 import { sendVerification } from "../utils/mailService.js";
+import type { ReqResNext } from "../interfaces/interfaces.js";
 
-export const verifyEmail = async (req, res, next) => {
+export const verifyEmail = async ({ req, res, next }: ReqResNext) => {
   try {
     const { token } = req.query;
     const result = await pool.query(
