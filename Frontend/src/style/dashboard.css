@@ -1,11 +1,12 @@
 /* Dashboard.css */
 .dashboard-container {
-  max-width: 500px;
-  margin: 0 auto;
+  margin: 10px auto;
   padding: 20px;
   font-family: "Segoe UI", Roboto, sans-serif;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+  min-height: 83vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .dashboard-header {
@@ -64,6 +65,32 @@ a.dashboard-about:hover {
   font-size: 32px;
 }
 
+button.add-button {
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  padding: 5px 10px;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+button.cancel-btn {
+  background-color: rgb(230, 80, 80);
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+button.cancel-btn:hover {
+  background-color: red;
+}
+button.add-button:hover {
+  background-color: white;
+  color: black;
+}
+
 .section-option {
   justify-content: center;
   display: flex;
@@ -85,11 +112,17 @@ a.dashboard-about:hover {
 }
 .section-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  gap: 10px;
+  flex-direction: column;
 }
 
+.header-filter {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
 .list-container {
   display: flex;
   flex-direction: column;
@@ -97,6 +130,7 @@ a.dashboard-about:hover {
   overflow: auto;
   height: 70vh;
   overflow-x: hidden;
+  margin: 20px 0;
 }
 
 .transaction-card {
@@ -107,8 +141,12 @@ a.dashboard-about:hover {
   padding: 15px;
   border-radius: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
+.transaction-card:hover {
+  background-color: rgb(226, 223, 223);
+}
 .card-left {
   display: flex;
   align-items: center;
@@ -234,7 +272,7 @@ a.dashboard-about:hover {
 /* Styling untuk Kalender yang melayang */
 .profile-dropdown .react-calendar {
   position: absolute;
-  top: 100%; /* Muncul tepat di bawah tombol */
+  top: 120%; /* Muncul tepat di bawah tombol */
   right: 0; /* Rata kanan agar tidak keluar layar jika di pinggir */
 
   /* SOLUSI UTAMA: Tentukan lebar tetap */
@@ -247,6 +285,9 @@ a.dashboard-about:hover {
   border-radius: 8px;
   border: 1px solid #ddd;
   padding: 10px;
+}
+.react-calendar__month-view__days {
+  gap: 5px;
 }
 /* Styling Nama Hari (Sen, Sel, Rab...) */
 .react-calendar__month-view__weekdays {
@@ -297,11 +338,25 @@ a.dashboard-about:hover {
 .filter-date {
   display: flex;
   justify-content: center;
-  border-bottom: 1px black solid;
-  border-top: 1px solid black;
+  border: 1px solid #00000036;
+  border-radius: 50px;
 }
 
-@media (max-width: 600px) {
+select:focus {
+  outline: none;
+}
+option {
+  background-color: white;
+  color: black;
+}
+
+.balance-section {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media (max-width: 768px) {
   h1,
   h2,
   h3,
@@ -312,14 +367,33 @@ a.dashboard-about:hover {
   .balance-card {
     padding: 15px;
   }
-  .balance-card h1 {
-    font-size: 70%;
-  }
   .card-left {
     flex-direction: column;
   }
 
   .transaction-card {
     flex-direction: column;
+  }
+
+  .header-filter {
+    flex-direction: column;
+  }
+
+  .dashboard-container {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .balance-section {
+    width: 100%;
+  }
+
+  .chart-section {
+    display: none;
+  }
+
+  .profile-dropdown .react-calendar {
+    top: 108%;
+    right: -120px;
   }
 }
