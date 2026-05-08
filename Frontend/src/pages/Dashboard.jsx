@@ -106,7 +106,6 @@ export default function Dashboard() {
       })
       .catch((err) => console.error("Fetch error:", err))
       .finally(() => setIsLoading(false));
-    console.log("Sinyal Refresh Saat Ini:", refreshSignal);
   }, [
     token,
     navigate,
@@ -146,7 +145,6 @@ export default function Dashboard() {
     return <div className="loading-center">Memuat data keuangan...</div>;
   }
 
-  console.log(isMenuOpen);
   return (
     <div>
       <button
