@@ -2,12 +2,16 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { PasswordVisible } from "../components/PasswordVisible";
 import { Eye, EyeOff } from "lucide-react";
+import useAuthStore from "../state/authStore";
 import "../style/login.css";
+import loginImg from "../assets/Finance-login-hd.jpg";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const { email, setEmail, password, setPassword, error, setError } =
+    useAuthStore();
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -67,51 +71,59 @@ export default function Login() {
   };
   return (
     <div className="login-container">
-      <div
-        className="login-card"
-        style={{ position: "relative", width: "300px" }}
-      >
-        <h2>Login</h2>
-        {error && <div style={{ color: "red" }}>{error}</div>}
+      <div className="margin flex">
+        <div
+          className="login-card z-10 flex flex-col items-center justify-end h-full pb-10"
+          style={{ position: "relative" }}
+        >
+          <h2>Login</h2>
+          {error && <div style={{ color: "red" }}>{error}</div>}
 
-        <form onSubmit={handleLogin} className="login-form">
-          <input
-            type="email" // Gunakan type email untuk validasi dasar
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-          />
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Masukkan password"
-            style={{ paddingRight: "40px" }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            className="login-reset-visible"
-            type="button"
-            onClick={togglePassword}
-          >
-            {" "}
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}{" "}
-          </button>
-          <button
-            type="submit"
-            className="forgot-btn"
-            disabled={disabled}
-            style={disabled ? { bacgroundColor: "black" } : { color: "white" }}
-          >
-            submit
-          </button>
-        </form>
-        <Link to="/register" className="login-not-have-acc">
-          Do not have account ?
-        </Link>
-        <Link to="/forgot-page" className="login-not-have-acc">
-          Forgot password ?
-        </Link>
+          <form onSubmit={handleLogin} className="login-form">
+            <input
+              type="email" // Gunakan type email untuk validasi dasar
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+            />
+            <div className="input-group">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Masukkan password"
+                className="w-full p-3 bg-transparent outline-none" // Hilangkan border & outline default
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={togglePassword}
+                className="p-3 text-gray-500 hover:text-blue-600 transition-colors"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            <button
+              type="submit"
+              className="forgot-btn"
+              disabled={disabled}
+              style={
+                disabled ? { backgroundColor: "black" } : { color: "white" }
+              }
+            >
+              submit
+            </button>
+          </form>
+          <Link to="/register" className="login-not-have-acc">
+            Do not have account ?
+          </Link>
+          <Link to="/forgot-page" className="login-not-have-acc">
+            Forgot password ?
+          </Link>
+        </div>
+        <div className="login-img w-full h-full bg-[url('../assets/login-img-2.jpg')] bg-cover bg-center bg-no-repeat">
+          <img src={loginImg} alt="" />
+        </div>
       </div>
     </div>
   );
