@@ -77,21 +77,23 @@ export default function ResetPassword() {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Masukkan password"
-              style={{ paddingRight: "40px" }}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <button
-              className="reset-pass-visible"
-              type="button"
-              onClick={togglePassword}
-            >
-              {" "}
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}{" "}
-            </button>
+            <div className="input-group">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Masukkan password"
+                style={{ paddingRight: "40px" }}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <button
+                className="reset-pass-visible"
+                type="button"
+                onClick={togglePassword}
+              >
+                {" "}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}{" "}
+              </button>
+            </div>
             <button
               type="submit"
               className="forgot-btn"
