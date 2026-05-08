@@ -6,6 +6,7 @@ import checkExpiredToken from "../utils/checkExpiredToken";
 export default function AddPages() {
   const token = localStorage.getItem("token") || null;
   const [amount, setAmount] = useState("");
+  const numberAmount = amount.split(".").join("");
   const [type, setType] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
@@ -29,7 +30,7 @@ export default function AddPages() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            amount: Number(amount),
+            amount: Number(numberAmount),
             type,
             categoryId: Number(categoryId),
             description,
@@ -57,16 +58,21 @@ export default function AddPages() {
       return <div>{error.message}</div>;
     }
   }
+
+  const formatter = new Intl.NumberFormat("id-ID");
   return (
     <div className="dashboard-container-add">
-      <Link to={"/"} className="add-transaction-back">
-        Kembali
-      </Link>
       <form onSubmit={formHandler} className="add-transaction-form">
         <input
           type="text"
           value={amount ?? ""}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => {
+            let value = e.target.value.replace(/\D/g, "");
+            if (value) {
+              return setAmount(`${formatter.format(parseInt(value))}`);
+            }
+            setAmount("");
+          }}
           placeholder="Amount"
         />
         <select
@@ -102,7 +108,11 @@ export default function AddPages() {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
         />
-        <button type="submit" disabled={disabled}>
+        <button
+          type="submit"
+          disabled={disabled}
+          className={!disabled ? "add-btn" : "add-btn-disabled"}
+        >
           Add
         </button>
       </form>
