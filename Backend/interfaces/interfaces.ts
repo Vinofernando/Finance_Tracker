@@ -79,12 +79,7 @@ export interface LoginControl {
   };
 }
 export interface DeleteUserControl {
-  params: {
-    userId: number;
-  };
-  user: {
-    role: string;
-  };
+  userId: number;
 }
 export interface ForgotPasswordControl {
   body: {
