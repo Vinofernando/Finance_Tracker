@@ -3,11 +3,11 @@ import type { Request, Response, NextFunction } from "express";
 import type { User } from "../interfaces/interfaces.js";
 const JWT_SECRET = process.env.SECRET_KEY;
 
-interface AuthRequest extends Request {
-  user?: User | string | jwt.JwtPayload;
-}
+// interface AuthRequest extends Request {
+//   user?: User | string | jwt.JwtPayload;
+// }
 export const authenticatedToken = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {
