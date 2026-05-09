@@ -120,7 +120,7 @@ export const sumTransactions = async (userId: number) => {
 
     const getIncome = await pool.query(
       `
-      SELECT SUM(amount) FILTER (WHERE date >= '2026-${i + 1}-1'::timestamptz AND date <='2026-${i + 1}-${getDay}'::timestamptz AND type = $2) AS income
+      SELECT SUM(amount) FILTER (WHERE date >= '${thisYear}-${i + 1}-1'::timestamptz AND date <='${thisYear}-${i + 1}-${getDay}'::timestamptz AND type = $2) AS income
       FROM transactions
       WHERE user_id = $1
     `,
@@ -129,15 +129,15 @@ export const sumTransactions = async (userId: number) => {
 
     const getExpense = await pool.query(
       `
-        SELECT SUM(amount) FILTER (WHERE date >= '2026-${i + 1}-1'::timestamptz AND date <='2026-${i + 1}-${getDay}'::timestamptz AND type = $2) AS expense
+        SELECT SUM(amount) FILTER (WHERE date >= '${thisYear}-${i + 1}-1'::timestamptz AND date <='${thisYear}-${i + 1}-${getDay}'::timestamptz AND type = $2) AS expense
         FROM transactions
         WHERE user_id = $1
       `,
       [userId, "expense"],
     );
 
-    const incomeValue = Number(getIncome.rows[0]!.income ?? 0);
-    const expenseValue = Number(getExpense.rows[0]!.expense ?? 0);
+    const incomeValue = Number(getIncome.rows[0]?.income ?? 0);
+    const expenseValue = Number(getExpense.rows[0]?.expense ?? 0);
 
     const targetMonth = sumDataTransactions[i];
 
@@ -146,11 +146,19 @@ export const sumTransactions = async (userId: number) => {
       targetMonth.expense = Math.trunc(expenseValue);
       targetMonth.balance = incomeValue - expenseValue;
     }
-
-    return {
-      data: sumDataTransactions,
-    };
+    console.log(targetMonth);
   }
+
+  // const income = getIncome.rows[0].sum;
+  // const expense = getExpense.rows[0].sum;
+  // const balance = income - -expense;
+
+  return {
+    // income: Number(income),
+    // expense: Number(expense),
+    // balance,
+    data: sumDataTransactions,
+  };
 };
 
 export const getUser = async (userId: number) => {
