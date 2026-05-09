@@ -4,8 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.ts",
-    "dev": "tsx watch index.ts"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx index.ts"
   },
   "keywords": [],
   "author": "",
