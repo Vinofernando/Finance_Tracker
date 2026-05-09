@@ -7,6 +7,7 @@ import type {
 } from "../interfaces/interfaces.js";
 import * as authService from "../services/authService.js";
 import express from "express";
+import type { Request } from "express";
 
 export const register = async (
   req: RegisterControl,
@@ -42,15 +43,16 @@ export const login = async (
 };
 
 export const deleteUser = async (
-  req: DeleteUserControl,
+  req: Request<any>,
   res: express.Response,
   next: express.NextFunction,
 ) => {
   try {
-    const deleteResult = await authService.deleteUser(
-      req.params.userId,
-      req.user.role,
-    );
+    if (!req.user || !req.user.role) {
+      return res.status(401).json({ message: "Unauthorized or Role missing" });
+    }
+    const { userId } = req.params as DeleteUserControl;
+    const deleteResult = await authService.deleteUser(userId, req.user.role);
     res.json(deleteResult);
   } catch (err) {
     return next(err);
