@@ -1,4 +1,4 @@
-import "../style/SegmentedControl.css";
+import "../style/segmentedcontrol.css";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 
 const SegmentedControl = ({ filter, setFilter, sort, setSort }) => {
