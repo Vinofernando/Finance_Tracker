@@ -2,6 +2,7 @@ import express from "express";
 import type { Request } from "express";
 
 export interface User {
+  userId: number;
   username: string;
   email: string;
   password: string;
