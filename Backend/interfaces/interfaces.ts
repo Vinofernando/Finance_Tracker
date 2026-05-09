@@ -1,4 +1,5 @@
 import express from "express";
+import type { Request } from "express";
 
 export interface User {
   username: string;
@@ -36,50 +37,30 @@ export interface SumDataTransactions {
 }
 // TRANSACTION CONTROLLER
 export interface GetUserTransactionControl {
-  user: {
-    userId: number;
-    username: string;
-    email: string;
-    password: string;
-  };
-  query: {
-    start: string;
-    end: string;
-    order?: string;
-  };
+  start: string;
+  end: string;
+  order?: string;
 }
 
 export interface NewTransactionControl {
-  user: {
-    userId: number;
-  };
-  body: {
-    amount: number;
-    type: string;
-    categoryId: number;
-    description: string;
-  };
+  amount: number;
+  type: string;
+  categoryId: number;
+  description: string;
 }
 
-export interface deleteTransactionControl {
-  user: {
-    userId: number;
-  };
-  params: {
-    id: number;
-  };
+export interface DeleteTransactionControl {
+  id: number;
 }
 
-export interface SumTransactionsControl {
-  user: {
-    userId: number;
-  };
-}
+// export interface SumTransactionsControl {
+//   user: {
+//     userId: number;
+//   };
+// }
 
 export interface GetUserControl {
-  query: {
-    userId: number;
-  };
+  userId: number;
 }
 
 // AUTH CONTROLLER
