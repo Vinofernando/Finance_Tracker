@@ -5,7 +5,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 console.log(process.env.RESEND_API_KEY);
-export const sendVerification = async (toEmail, token) => {
+export const sendVerification = async (toEmail: string, token: string) => {
   const baseUrl = process.env.FRONTEND_URL || "https://finance-tracker.store";
   const link = `${baseUrl}/success-verification?token=${token}`;
 
@@ -28,7 +28,7 @@ export const sendVerification = async (toEmail, token) => {
   }
 };
 
-export const sendResetPassLink = async (toEmail, token) => {
+export const sendResetPassLink = async (toEmail: string, token: string) => {
   const baseUrl = process.env.FRONTEND_URL || "https://finance-tracker.store";
   const link = `${baseUrl}/reset-page?token=${token}`;
 
