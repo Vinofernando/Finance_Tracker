@@ -74,7 +74,7 @@ export const deleteTransaction = async (
 };
 
 export const sumTransactions = async (
-  req: Request<{}>,
+  req: Request,
   res: express.Response,
   next: express.NextFunction,
 ) => {
@@ -82,9 +82,12 @@ export const sumTransactions = async (
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const sumTransactions = await transactionService.sumTransactions(
-      req.user.userId,
-    );
+
+    const userId = Number(req.user.userId);
+    if (!userId) {
+      return res.status(401).json({ message: "Cant find user" });
+    }
+    const sumTransactions = await transactionService.sumTransactions(userId);
     res.json(sumTransactions);
   } catch (err) {
     next(err);
