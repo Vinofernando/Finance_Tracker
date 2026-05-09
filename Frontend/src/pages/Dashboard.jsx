@@ -6,7 +6,6 @@ import Calendar from "react-calendar";
 import "../style/dashboard.css";
 import "react-calendar/dist/Calendar.css";
 import SimpleBarChart from "../components/SimpleBarChart";
-import PieChartWithCustomizedLabel from "../components/PieCharts";
 import SegmentedControl from "../components/SegmentedControl";
 ("use client");
 import { motion as Motion, AnimatePresence } from "framer-motion";
@@ -460,9 +459,6 @@ export default function Dashboard() {
           </Motion.div>
         </AnimatePresence>
       </div>
-      {/* <div>
-        <PieChartWithCustomizedLabel />
-      </div> */}
     </div>
   );
 }
