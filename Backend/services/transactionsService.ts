@@ -144,7 +144,7 @@ export const sumTransactions = async (userId: number) => {
     if (targetMonth) {
       targetMonth.income = Math.trunc(incomeValue);
       targetMonth.expense = Math.trunc(expenseValue);
-      targetMonth.balance = incomeValue - expenseValue;
+      targetMonth.balance = incomeValue - -expenseValue;
     }
     console.log(targetMonth);
   }
