@@ -3,7 +3,7 @@ import { useSearchParams, Link } from "react-router-dom";
 
 export default function VerificationSuccess() {
   const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState("loading...");
+  const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
 
   const token = searchParams.get("token");
@@ -43,7 +43,6 @@ export default function VerificationSuccess() {
       isMounted = false;
     }; // Cleanup function
   }, [token]);
-
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       {status === "loading" && <h1>Sedang memverifikasi...</h1>}
