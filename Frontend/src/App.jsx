@@ -17,10 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/add-transaction" element={<AddPages />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/success-verification/"
-          element={<VerificationSuccess />}
-        />
+        <Route path="/success-verification" element={<VerificationSuccess />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/about" element={<About />} />
         <Route path="/forgot-page" element={<ForgotPassword />} />
