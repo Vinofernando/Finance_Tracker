@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+import redisClient from "../config/redis.js";
 import type {
   NewTransaction,
   SumDataTransactions,
@@ -10,6 +11,12 @@ export const getUserTransaction = async (
   end = "",
   order?: string,
 ) => {
+  const cacheKey = `Transaction:${userId}:${start}:${end}:${order || "NONE"}`;
+  const cacheData = await redisClient.get(cacheKey);
+  if (cacheData) {
+    return JSON.parse(cacheData);
+  }
+
   const value = [userId];
   let query = `SELECT 
       t.transaction_id,
@@ -40,7 +47,9 @@ export const getUserTransaction = async (
   }
 
   const result = await pool.query(query, value);
-  console.log(query);
+  await redisClient.set(cacheKey, JSON.stringify(result.rows), {
+    EX: 3600,
+  });
   return result.rows;
 };
 
@@ -56,6 +65,13 @@ export const newTransaction = async ({
       status: 400,
       message: "All field required and Amount cannot equal or less than zero",
     };
+
+  const keys = await redisClient.keys(`Transaction:${userId}:*`);
+
+  if (keys.length > 0) {
+    // Hapus semua cache variasi filter milik user ini sekaligus
+    await redisClient.del(keys);
+  }
 
   let finalAmount = Number(amount);
 
@@ -84,6 +100,13 @@ export const deleteTransaction = async (
   userId: number,
   transactionId: number,
 ) => {
+  const keys = await redisClient.keys(`Transaction:${userId}`);
+
+  if (keys.length > 0) {
+    // Hapus semua cache variasi filter milik user ini sekaligus
+    await redisClient.del(keys);
+  }
+
   const transaction = await pool.query(
     `DELETE FROM transactions WHERE transaction_id = $1 AND user_id = $2 RETURNING *`,
     [transactionId, userId],
@@ -99,6 +122,12 @@ export const deleteTransaction = async (
 };
 
 export const sumTransactions = async (userId: number) => {
+  const cacheKey = `Transactions: ${userId}`;
+  const cacheData = await redisClient.get(cacheKey);
+
+  if (cacheData) {
+    return JSON.parse(cacheData);
+  }
   const thisMonth = new Date().getMonth();
   const sumDataTransactions: SumDataTransactions[] = [
     { month: "Jan", income: 0, expense: 0, balance: 0 },
@@ -146,17 +175,12 @@ export const sumTransactions = async (userId: number) => {
       targetMonth.expense = Math.trunc(expenseValue);
       targetMonth.balance = incomeValue - -expenseValue;
     }
-    console.log(targetMonth);
   }
 
-  // const income = getIncome.rows[0].sum;
-  // const expense = getExpense.rows[0].sum;
-  // const balance = income - -expense;
-
+  await redisClient.set(cacheKey, JSON.stringify(sumDataTransactions), {
+    EX: 3600,
+  });
   return {
-    // income: Number(income),
-    // expense: Number(expense),
-    // balance,
     data: sumDataTransactions,
   };
 };
