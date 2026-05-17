@@ -7,6 +7,7 @@ export const verifyEmail = async ({ req, res, next }: ReqResNext) => {
   try {
     const { token = "" } = req.query;
 
+    console.log(token);
     if (!token) {
       throw { status: 400, message: "Token tidak ditemukan" };
     }
