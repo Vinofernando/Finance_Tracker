@@ -43,6 +43,7 @@ export default function VerificationSuccess() {
       isMounted = false;
     }; // Cleanup function
   }, [token]);
+
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       {status === "loading" && <h1>Sedang memverifikasi...</h1>}
