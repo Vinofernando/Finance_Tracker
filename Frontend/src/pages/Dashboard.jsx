@@ -105,19 +105,7 @@ export default function Dashboard() {
       })
       .catch((err) => console.error("Fetch error:", err))
       .finally(() => setIsLoading(false));
-  }, [
-    token,
-    navigate,
-    sort,
-    role,
-    start,
-    end,
-    today,
-    filter,
-    refreshSignal,
-    thisMonth,
-    data,
-  ]);
+  }, [token, navigate, sort, role, start, end, filter, refreshSignal]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
