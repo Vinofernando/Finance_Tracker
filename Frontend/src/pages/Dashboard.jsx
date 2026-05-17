@@ -32,7 +32,7 @@ export default function Dashboard() {
   ]);
   const [filter, setFilter] = useState("byDate");
   const [refreshSignal, setRefreshSignal] = useState(0);
-  const [getThisMonthBalance, setGetThisMonthBalance] = useState("");
+  const [getThisMonthBalance, setGetThisMonthBalance] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Fungsi pembantu (helper) untuk format YYYY-MM-DD lokal
@@ -105,7 +105,7 @@ export default function Dashboard() {
       })
       .catch((err) => console.error("Fetch error:", err))
       .finally(() => setIsLoading(false));
-  }, [token, navigate, sort, role, start, end, filter, refreshSignal]);
+  }, [token, navigate, sort, role, start, end, filter, refreshSignal, data]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -302,26 +302,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-
-      <header className="dashboard-header">
-        {/* <div>
-            <Link to={"/about"} className="dashboard-about">
-              About
-            </Link>
-            <h2 className="welcome-text">Halo, Selamat Datang {name}!</h2>
-            <p className="date-text">
-              {new Date().toLocaleDateString("id-ID", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-          </div> */}
-        {/* <button onClick={logoutHandler} className="logout-btn">
-            Logout
-          </button> */}
-      </header>
 
       <div style={{ margin: "0 30px" }}>
         <div className="section-header">
