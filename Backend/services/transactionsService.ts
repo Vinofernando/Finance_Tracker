@@ -150,7 +150,7 @@ export const sumTransactions = async (userId: number) => {
   try {
     if (await menjaminRedisTerbuka()) {
       const cacheData2 = await redisClient.get(cacheKey2);
-      if (cacheData2) return JSON.parse(cacheData2);
+      if (cacheData2) return { data: JSON.parse(cacheData2) };
     }
   } catch (err) {
     console.error("Redis error pada summary:", err);
