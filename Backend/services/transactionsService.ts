@@ -1,9 +1,22 @@
 import pool from "../config/db.js";
-import redisClient from "../config/redis.js";
+import redisClient, { connectRedis } from "../config/redis.js";
 import type {
   NewTransaction,
   SumDataTransactions,
 } from "../interfaces/interfaces.js";
+
+// Fungsi pembantu internal untuk memastikan koneksi Redis aman
+const menjaminRedisTerbuka = async () => {
+  try {
+    if (!redisClient.isOpen) {
+      await connectRedis();
+    }
+    return true;
+  } catch (err) {
+    console.error("Gagal menyambungkan ulang ke Redis:", err);
+    return false;
+  }
+};
 
 export const getUserTransaction = async (
   userId: number,
@@ -12,44 +25,50 @@ export const getUserTransaction = async (
   order?: string,
 ) => {
   const cacheKey = `Transaction:${userId}:${start}:${end}:${order || "NONE"}`;
-  const cacheData = await redisClient.get(cacheKey);
-  if (cacheData) {
-    return JSON.parse(cacheData);
+
+  try {
+    if (await menjaminRedisTerbuka()) {
+      const cacheData = await redisClient.get(cacheKey);
+      if (cacheData) return JSON.parse(cacheData);
+    }
+  } catch (err) {
+    console.error("Redis error, bypassing to Database:", err);
   }
 
-  const value = [userId];
-  let query = `SELECT 
-      t.transaction_id,
-      t.user_id,
-      t.amount,
-      t.type,
-      t.date,
-      t.description,
-      c.category
-
-    FROM categories c
-    INNER JOIN transactions t on t.category_id = c.categories_id
-    WHERE user_id = $1
-    `;
-
+  // Validasi tanggal ditaruh sebelum query berjalan demi efisiensi
   if ((end && !start) || start > end) {
     throw {
       status: 400,
       message: "Tanggal akhir tidak boleh lebih kecil dari awal",
     };
   }
+
+  const value = [userId];
+  let query = `SELECT 
+      t.transaction_id, t.user_id, t.amount, t.type, t.date, t.description, c.category
+    FROM categories c
+    INNER JOIN transactions t on t.category_id = c.categories_id
+    WHERE user_id = $1 `;
+
   if (start || end) {
     query += ` AND (date AT TIME ZONE 'Asia/Jakarta')::date between '${start}' AND '${end}'`;
   }
 
-  if (order !== null) {
+  if (order) {
     query += ` ORDER BY date ${order}`;
   }
 
   const result = await pool.query(query, value);
-  await redisClient.set(cacheKey, JSON.stringify(result.rows), {
-    EX: 3600,
-  });
+
+  try {
+    if (redisClient.isOpen) {
+      await redisClient.set(cacheKey, JSON.stringify(result.rows), {
+        EX: 3600,
+      });
+    }
+  } catch (err) {
+    console.error("Gagal menyimpan ke Redis:", err);
+  }
   return result.rows;
 };
 
@@ -66,33 +85,32 @@ export const newTransaction = async ({
       message: "All field required and Amount cannot equal or less than zero",
     };
 
-  const keys = await redisClient.keys(`Transaction:${userId}:*`);
-
-  if (keys.length > 0) {
-    // Hapus semua cache variasi filter milik user ini sekaligus
-    await redisClient.del(keys);
+  // Bersihkan semua cache terkait user ini karena data berubah
+  try {
+    if (await menjaminRedisTerbuka()) {
+      const keys = await redisClient.keys(`Transaction:${userId}:*`);
+      if (keys.length > 0) await redisClient.del(keys);
+      await redisClient.del(`Transactions: ${userId}`); // Perbaikan Bug 2: Hapus cache summary
+    }
+  } catch (err) {
+    console.error("Gagal membersihkan cache saat data baru masuk:", err);
   }
 
   let finalAmount = Number(amount);
-
-  if (type.toLowerCase() === "expense") {
-    finalAmount = Math.abs(finalAmount) * -1;
-  } else {
-    finalAmount = Math.abs(finalAmount);
-  }
+  finalAmount =
+    type.toLowerCase() === "expense"
+      ? Math.abs(finalAmount) * -1
+      : Math.abs(finalAmount);
 
   const result = await pool.query(
-    `
-      INSERT INTO transactions(user_id, amount, type, category_id, description)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *
-    `,
+    `INSERT INTO transactions(user_id, amount, type, category_id, description)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
     [userId, finalAmount, type, categoryId, description],
   );
 
   return {
     message: "Successfully add new transaction",
-    data: result.rows[0], // Biasanya lebih baik return satu objek saja
+    data: result.rows[0],
   };
 };
 
@@ -100,11 +118,16 @@ export const deleteTransaction = async (
   userId: number,
   transactionId: number,
 ) => {
-  const keys = await redisClient.keys(`Transaction:${userId}`);
-
-  if (keys.length > 0) {
-    // Hapus semua cache variasi filter milik user ini sekaligus
-    await redisClient.del(keys);
+  // Bersihkan semua cache terkait user ini karena data dihapus
+  try {
+    if (await menjaminRedisTerbuka()) {
+      // Perbaikan Bug 1 & 2: Gunakan wildcard :* dan ikut hapus cache summary
+      const keys = await redisClient.keys(`Transaction:${userId}:*`);
+      if (keys.length > 0) await redisClient.del(keys);
+      await redisClient.del(`Transactions: ${userId}`);
+    }
+  } catch (err) {
+    console.error("Gagal membersihkan cache saat data dihapus:", err);
   }
 
   const transaction = await pool.query(
@@ -122,13 +145,20 @@ export const deleteTransaction = async (
 };
 
 export const sumTransactions = async (userId: number) => {
-  const cacheKey = `Transactions: ${userId}`;
-  const cacheData = await redisClient.get(cacheKey);
+  const cacheKey2 = `Transactions: ${userId}`;
 
-  if (cacheData) {
-    return JSON.parse(cacheData);
+  try {
+    if (await menjaminRedisTerbuka()) {
+      const cacheData2 = await redisClient.get(cacheKey2);
+      if (cacheData2) return JSON.parse(cacheData2);
+    }
+  } catch (err) {
+    console.error("Redis error pada summary:", err);
   }
-  const thisMonth = new Date().getMonth();
+
+  const thisYear = new Date().getFullYear();
+  const thisMonth = new Date().getMonth(); // 0 = Jan, 1 = Feb, dst.
+
   const sumDataTransactions: SumDataTransactions[] = [
     { month: "Jan", income: 0, expense: 0, balance: 0 },
     { month: "Feb", income: 0, expense: 0, balance: 0 },
@@ -143,63 +173,55 @@ export const sumTransactions = async (userId: number) => {
     { month: "Nov", income: 0, expense: 0, balance: 0 },
     { month: "Dec", income: 0, expense: 0, balance: 0 },
   ];
-  for (let i = 0; i <= thisMonth; i++) {
-    const thisYear = new Date().getFullYear();
-    const getDay = new Date(thisYear, i + 1, 0).getDate();
 
-    const getIncome = await pool.query(
-      `
-      SELECT SUM(amount) FILTER (WHERE date >= '${thisYear}-${i + 1}-1'::timestamptz AND date <='${thisYear}-${i + 1}-${getDay}'::timestamptz AND type = $2) AS income
-      FROM transactions
-      WHERE user_id = $1
-    `,
-      [userId, "income"],
-    );
+  // Perbaikan Bug 3: Ganti 24x query loop menjadi HANYA 1x KALI QUERY OPTIMAL saja!
+  const dbResult = await pool.query(
+    `SELECT 
+        EXTRACT(MONTH FROM date) as bulan,
+        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as total_income,
+        SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as total_expense
+     FROM transactions
+     WHERE user_id = $1 AND EXTRACT(YEAR FROM date) = $2
+     GROUP BY EXTRACT(MONTH FROM date)`,
+    [userId, thisYear],
+  );
 
-    const getExpense = await pool.query(
-      `
-        SELECT SUM(amount) FILTER (WHERE date >= '${thisYear}-${i + 1}-1'::timestamptz AND date <='${thisYear}-${i + 1}-${getDay}'::timestamptz AND type = $2) AS expense
-        FROM transactions
-        WHERE user_id = $1
-      `,
-      [userId, "expense"],
-    );
+  // Masukkan hasil dari database 1-kali-tarik tersebut ke dalam array struktur bulan
+  dbResult.rows.forEach((row) => {
+    const indexBulan = Number(row.bulan) - 1; // SQL Bulan dimulai dari 1, JS dari 0
+    if (indexBulan <= thisMonth && sumDataTransactions[indexBulan]) {
+      const inc = Number(row.total_income || 0);
+      const exp = Number(row.total_expense || 0);
 
-    const incomeValue = Number(getIncome.rows[0]?.income ?? 0);
-    const expenseValue = Number(getExpense.rows[0]?.expense ?? 0);
-
-    const targetMonth = sumDataTransactions[i];
-
-    if (targetMonth) {
-      targetMonth.income = Math.trunc(incomeValue);
-      targetMonth.expense = Math.trunc(expenseValue);
-      targetMonth.balance = incomeValue - -expenseValue;
+      sumDataTransactions[indexBulan].income = Math.trunc(inc);
+      sumDataTransactions[indexBulan].expense = Math.trunc(exp);
+      sumDataTransactions[indexBulan].balance = Math.trunc(inc + exp); // karena expense sudah bernilai negatif di DB
     }
+  });
+
+  try {
+    if (redisClient.isOpen) {
+      await redisClient.set(cacheKey2, JSON.stringify(sumDataTransactions), {
+        EX: 3600,
+      });
+    }
+  } catch (err) {
+    console.error("Gagal menyimpan ke Redis:", err);
   }
 
-  await redisClient.set(cacheKey, JSON.stringify(sumDataTransactions), {
-    EX: 3600,
-  });
-  return {
-    data: sumDataTransactions,
-  };
+  return { data: sumDataTransactions };
 };
 
 export const getUser = async (userId: number) => {
-  // Query dasar dengan pemisahan Income dan Expense
   const query = `
   SELECT 
-    u.user_id, 
-    u.username, 
-    u.user_email, 
-    u.role, 
+    u.user_id, u.username, u.user_email, u.role, 
     SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END) as total_income,
     SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END) as total_expense,
     SUM(t.amount) as total_amount
   FROM transactions t 
   LEFT JOIN users u ON t.user_id = u.user_id 
-  WHERE u.role != $1
-`;
+  WHERE u.role != $1`;
 
   const groupByClause = ` GROUP BY u.user_id, u.username, u.user_email, u.role`;
 
@@ -210,7 +232,5 @@ export const getUser = async (userId: number) => {
   }
 
   const res = await pool.query(query + groupByClause, ["admin"]);
-  return {
-    user: res.rows,
-  };
+  return { user: res.rows };
 };
