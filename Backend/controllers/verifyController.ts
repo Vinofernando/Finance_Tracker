@@ -6,6 +6,10 @@ import type { ReqResNext } from "../interfaces/interfaces.js";
 export const verifyEmail = async ({ req, res, next }: ReqResNext) => {
   try {
     const { token = "" } = req.query;
+
+    if (!token) {
+      throw { status: 400, message: "Token tidak ditemukan" };
+    }
     const result = await pool.query(
       `SELECT user_email, token_expires_at FROM users WHERE verified_token = $1`,
       [token],
