@@ -6,6 +6,8 @@ const useAuthStore = create((set) => ({
   password: "",
   error: null,
   isAddModalOpen: false,
+  isAddPlanModalOpen: false,
+  method: "",
 
   // Action untuk update state
   setUsername: (name) => set({ username: name }),
@@ -15,6 +17,11 @@ const useAuthStore = create((set) => ({
   toggleAddModal: () =>
     set((state) => ({
       isAddModalOpen: !state.isAddModalOpen,
+    })),
+  toggleAddPlanModal: (method = "") =>
+    set((state) => ({
+      isAddPlanModalOpen: !state.isAddPlanModalOpen,
+      method,
     })),
 
   // Action untuk reset data (misal setelah submit berhasil)
