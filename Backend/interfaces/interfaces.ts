@@ -95,3 +95,13 @@ export interface ResetPasswordControl {
     token: string;
   };
 }
+
+export interface PlannedTransaction {
+  userId: Number;
+  categoryId: Number;
+  amount: Number;
+  description: string;
+  type: string | "income" | "expense";
+  startDate: string;
+  frequency: string | "yearly" | "monthly" | "weekly" | "daily";
+}
