@@ -263,6 +263,9 @@ export default function Dashboard() {
           >
             + Transaksi baru
           </button>
+          <Link to={"/add-plan-page"} className="planned-link">
+            + Rencana Transaksi
+          </Link>
           <AnimatePresence>
             {isAddModalOpen && (
               <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -303,7 +306,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div style={{ margin: "0 30px" }}>
+      <div style={{ margin: "100px 0 0 0" }}>
         <div className="section-header">
           <h3 style={{ margin: 0 }}>Riwayat Transaksi</h3>
           <span style={{ fontSize: "12px", color: "#666" }}>
