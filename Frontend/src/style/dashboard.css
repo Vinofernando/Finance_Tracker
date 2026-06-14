@@ -87,8 +87,7 @@ button.cancel-btn:hover {
   background-color: red;
 }
 button.add-button:hover {
-  background-color: white;
-  color: black;
+  background-color: #333;
 }
 
 .section-option {
@@ -355,6 +354,23 @@ option {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.planned-link {
+  background-color: black;
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  margin-top: 20px;
+  height: 34px;
+  align-items: center;
+  transition: all ease 0.2s;
+}
+
+.planned-link:hover {
+  background-color: #333;
 }
 @media (max-width: 768px) {
   h1,
