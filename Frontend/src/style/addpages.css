@@ -16,7 +16,6 @@
 form.add-transaction-form {
   display: flex;
   flex-direction: column;
-  width: 50%;
   gap: 10px;
 }
 
@@ -52,4 +51,19 @@ button.add-btn-disabled {
 }
 button.add-btn:hover {
   background-color: gray;
+}
+
+.dashboard-link {
+  background-color: #9810fa;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+  transition: all ease 0.2s;
+}
+
+.dashboard-link:hover {
+  background-color: rgb(90, 11, 90);
 }
