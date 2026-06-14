@@ -60,7 +60,7 @@ button.add-btn:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 10%;
+  width: 30%;
   transition: all ease 0.2s;
 }
 
