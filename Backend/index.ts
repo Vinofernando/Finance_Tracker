@@ -20,10 +20,23 @@ const corsOptions = {
   credentials: true,
 };
 
-cron.schedule("0 0 * * *", async () => {
-  console.log("Menjalankan pengecekan transaksi terencana...");
-  await processPlannedTransactions();
-});
+cron.schedule(
+  "0 0 * * *",
+  async () => {
+    console.log("Menjalankan pengecekan transaksi terencana...");
+
+    try {
+      await processPlannedTransactions();
+      console.log("Pengecekan transaksi selesai dengan sukses.");
+    } catch (error) {
+      // Log error atau kirim notifikasi ke Telegram/Slack/Email agar kamu tahu kalau gagal
+      console.error("Gagal menjalankan pengecekan transaksi:", error);
+    }
+  },
+  {
+    timezone: "Asia/Jakarta", // Memastikan jalan jam 12 malam WIB
+  },
+);
 
 app.use(cors(corsOptions));
 
