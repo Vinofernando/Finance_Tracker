@@ -4,6 +4,7 @@ import AddPages from "./pages/AddTransactions";
 import About from "./pages/About";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import AddPlanPages from "./pages/AddPlanTransaction";
 import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 import VerificationSuccess from "./pages/VerificationSuccess";
 import Register from "./pages/Register";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/forgot-page" element={<ForgotPassword />} />
         <Route path="/reset-page" element={<ResetPassword />} />
+        <Route path="/add-plan-page" element={<AddPlanPages />} />
       </Routes>
     </BrowserRouter>
   );
