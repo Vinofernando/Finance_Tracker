@@ -61,7 +61,7 @@ export default function AddPlannedTransaction({
               <Calendar
                 onChange={(date) => {
                   const dates = date.getDate();
-                  const month = date.getMonth();
+                  const month = date.getMonth() + 1;
                   const year = date.getFullYear();
                   handleChange("startDate", `${year}-${month}-${dates}`);
                 }}
