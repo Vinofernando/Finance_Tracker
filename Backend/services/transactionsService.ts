@@ -3,6 +3,7 @@ import redisClient, { connectRedis } from "../config/redis.js";
 import type {
   NewTransaction,
   SumDataTransactions,
+  PlannedTransaction,
 } from "../interfaces/interfaces.js";
 
 // Fungsi pembantu internal untuk memastikan koneksi Redis aman
@@ -233,4 +234,150 @@ export const getUser = async (userId: number) => {
 
   const res = await pool.query(query + groupByClause, ["admin"]);
   return { user: res.rows };
+};
+
+export const plannedTransaction = async ({
+  userId,
+  categoryId,
+  amount,
+  description,
+  type,
+  startDate,
+  frequency,
+}: PlannedTransaction) => {
+  try {
+    const result = await pool.query(
+      `
+        INSERT INTO planned_transactions(user_id, category_id, amount, description, type, start_date, frequency) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *
+      `,
+      [userId, categoryId, amount, description, type, startDate, frequency],
+    );
+
+    return {
+      message: "Add new planned transaction successfully",
+      data: result.rows,
+    };
+  } catch (err) {
+    console.error("Gagal menambah transaksi tetap", err);
+    return;
+  }
+};
+
+export const getUserPlannedTransaction = async (
+  userId: number,
+  plannedId: string | "",
+) => {
+  try {
+    if (!plannedId) {
+      const userPlanTran = await pool.query(
+        `SELECT * FROM planned_transactions WHERE user_id = $1 ORDER BY planned_id ASC`,
+        [userId],
+      );
+      return {
+        message: "Berhasil mendapat data user",
+        data: userPlanTran.rows,
+      };
+    }
+
+    const userByPlanId = await pool.query(
+      `SELECT * FROM planned_transactions WHERE user_id = $1 AND planned_id = $2 ORDER BY planned_id ASC`,
+      [userId, plannedId],
+    );
+    return {
+      message: "Berhasil mendapat data user",
+      data: userByPlanId.rows,
+    };
+  } catch (err) {
+    console.error("Gagal mendapat transaksi tetap", err);
+    return;
+  }
+};
+
+export const updatePlannedTransactionActive = async (
+  userId: number,
+  isActive: boolean,
+  plannedTransactionId: number,
+) => {
+  try {
+    const result = await pool.query(
+      `UPDATE planned_transactions SET is_active = $1 WHERE user_id = $2 AND planned_id = $3 RETURNING is_active, user_id, planned_id`,
+      [isActive, userId, plannedTransactionId],
+    );
+
+    if (result.rowCount === 0) {
+      console.error({ message: "Cant find planned transaction" });
+      return;
+    }
+
+    return {
+      message: "Update successfuly",
+      data: result.rows[0],
+    };
+  } catch (err) {
+    console.error("Gagal update transaksi", err);
+    throw err;
+  }
+};
+
+export const updatePlannedTransaction = async (
+  userId: number,
+  categoryId: number,
+  amount: number,
+  description: string,
+  type: string,
+  startDate: string,
+  frequency: string,
+  plannedId: string,
+) => {
+  try {
+    const result = await pool.query(
+      `UPDATE planned_transactions SET category_id = COALESCE($1, category_id), amount = COALESCE($2, amount), description = COALESCE($3, description), type = COALESCE($4, type), start_date = COALESCE($5, start_date), frequency = COALESCE($6, frequency) WHERE user_id = $7 AND planned_id = $8 RETURNING *`,
+      [
+        categoryId ?? null,
+        amount ?? null,
+        description ?? null,
+        type ?? null,
+        startDate ?? null,
+        frequency ?? null,
+        userId,
+        plannedId,
+      ],
+    );
+
+    if (result.rowCount === 0) {
+      console.error({ message: "Cant find planned transaction" });
+      return;
+    }
+
+    return {
+      message: "Berhasil update data transaksi tetap",
+      data: result.rows,
+    };
+  } catch (err) {
+    console.error("Gagal update transaksi tetap", err);
+    throw err;
+  }
+};
+
+export const deletePlannedTransaction = async (
+  userId: number,
+  plannedId: string,
+) => {
+  try {
+    const result = await pool.query(
+      `DELETE FROM planned_transactions WHERE user_id = $1 AND planned_id = $2 RETURNING *`,
+      [userId, plannedId],
+    );
+
+    if (result.rowCount === 0 || null) {
+      throw { status: 400, message: "Transaction not found" };
+    }
+
+    return {
+      message: "Successfully deleted planned transaction",
+      data: result.rows,
+    };
+  } catch (err) {
+    throw err;
+  }
 };
