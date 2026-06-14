@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { updatePlannedTransaction } from "../services/updatePlannedTransaction";
 
-export function UseUpdatePlannedTransaction(token) {
+export function UseUpdatePlannedTransaction() {
   const [formData, setFormData] = useState({
     categoryId: "",
     amount: 0,
@@ -19,15 +18,9 @@ export function UseUpdatePlannedTransaction(token) {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await updatePlannedTransaction(token, formData);
-  };
   return {
     formData,
     setFormData,
-    handleSubmit,
     handleChange,
   };
 }
