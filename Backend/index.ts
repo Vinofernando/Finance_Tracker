@@ -1,9 +1,11 @@
 import authRoutes from "./routes/authRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import express from "express";
+import cron from "node-cron";
 import { errorHandler } from "./middleware/errorHandler.js";
 import cors from "cors";
 import morgan from "morgan";
+import processPlannedTransactions from "./utils/automaticPlannedTransaction.js";
 
 const app = express();
 app.use(express.json());
@@ -12,11 +14,16 @@ const corsOptions = {
   origin: [
     "https://finance-trackerv.netlify.app",
     "https://finance-tracker.store",
-    "http://localhost:5173", // tetap izinkan local untuk testing
+    "http://localhost:5173",
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
+
+cron.schedule("0 0 * * *", async () => {
+  console.log("Menjalankan pengecekan transaksi terencana...");
+  await processPlannedTransactions();
+});
 
 app.use(cors(corsOptions));
 
