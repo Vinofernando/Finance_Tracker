@@ -9,9 +9,6 @@ import loginImg from "../assets/Finance-login-hd.jpg";
 export default function Login() {
   const { email, setEmail, password, setPassword, error, setError } =
     useAuthStore();
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
