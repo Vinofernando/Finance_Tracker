@@ -152,7 +152,7 @@ export default function AddPlanPages() {
     if (!confirmDelete) return;
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/transaction/delete-planned-transaction?plannedId=${plannedId}`,
+        `https://api.finance-tracker.store/api/transaction/delete-planned-transaction?plannedId=${plannedId}`,
         {
           method: "DELETE",
           headers: {
