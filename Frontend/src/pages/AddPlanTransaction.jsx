@@ -27,7 +27,7 @@ export default function AddPlanPages() {
   async function getPlannedTransaction() {
     try {
       const response = await fetch(
-        "https://api.finance-tracker.store/api/transaction/planned-transaction",
+        "http://127.0.0.1:5000/api/transaction/planned-transaction",
         {
           headers: {
             "Content-Type": "application/json",
