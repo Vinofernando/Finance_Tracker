@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/addpages.css";
 import { Link, useNavigate } from "react-router-dom";
 import checkExpiredToken from "../utils/checkExpiredToken";
@@ -12,6 +12,38 @@ export default function AddPages() {
   const [description, setDescription] = useState("");
   const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (description.trim() === "") return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          "https://api.finance-tracker.store/api/transaction/predict",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              description: description,
+            }),
+          },
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.type_otomatis) setType(data.type_otomatis);
+          if (data.kategori_otomatis)
+            setCategoryId(Number(data.kategori_otomatis));
+        }
+      } catch (err) {
+        console.error("Gagal mendapatkan prediksi ML:", err);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [description, token]);
 
   async function formHandler(e) {
     setDisabled(true);
@@ -58,11 +90,16 @@ export default function AddPages() {
       return <div>{error.message}</div>;
     }
   }
-
   const formatter = new Intl.NumberFormat("id-ID");
   return (
     <div className="dashboard-container-add">
       <form onSubmit={formHandler} className="add-transaction-form">
+        <input
+          type="text"
+          value={description ?? ""}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description"
+        />
         <input
           type="text"
           value={amount ?? ""}
@@ -102,12 +139,6 @@ export default function AddPages() {
           <option value={4}>Gaji</option>
           <option value={5}>Lainnya</option>
         </select>
-        <input
-          type="text"
-          value={description ?? ""}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
-        />
         <button
           type="submit"
           disabled={disabled}
