@@ -123,3 +123,15 @@
 .switch input:checked + .slider::before {
   transform: translateX(24px);
 }
+
+@media (max-width: 768px) {
+  th {
+    font-size: 0.7rem;
+  }
+
+  .planned-table th,
+  .planned-table td {
+    padding: 14px 14px;
+    text-align: left;
+  }
+}
