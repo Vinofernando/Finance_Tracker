@@ -4,7 +4,6 @@ dotenv.config();
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-console.log(process.env.RESEND_API_KEY);
 export const sendVerification = async (toEmail: string, token: string) => {
   const baseUrl = process.env.FRONTEND_URL || "https://finance-tracker.store";
   const link = `${baseUrl}/success-verification?token=${token}`;
@@ -14,7 +13,7 @@ export const sendVerification = async (toEmail: string, token: string) => {
       from: "Finance Tracker <noreply@finance-tracker.store>",
       to: toEmail,
       subject: "Verifikasi Email Anda",
-      html: `<a href="${link}">Verifikasi Email</a>`,
+      html: `<h1>Klik link berikut untuk verifikasi email</h1><a href="${link}">Verifikasi Email</a>`,
     });
 
     if (error) {
